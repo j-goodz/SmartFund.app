@@ -197,7 +197,7 @@ class Dashboard extends React.Component {
             </IconButton>
           </div>
           <Divider />
-          {/* <ListItems /> */}
+          <ListItems />
           {/* <List>{mainListItems}</List>
           <Divider />
           <List>{openListItems}</List>

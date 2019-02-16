@@ -20,22 +20,7 @@ import moment from 'moment';
 // 	}
 // }
 
-// // -----------------------
-// export function fetchETHPrice(){
-// 	return(dispatch) => {
-// 		return axios.get('https://api.coinbase.com/v2/prices/ETH-USD/spot').then((res) => {
-// 			dispatch(updateETHPrice(res.data.data.amount));
-// 			// console.log("eth refreshed")
-// 		})
-// 	}
-// }
 
-// export function updateETHPrice(amount){
-// 	return{
-// 		type:"UPDATE_ETH_PRICE",
-// 		eth_price:amount
-// 	}
-// }
 
 // -----------------------
 export function counterTick(){
@@ -51,56 +36,6 @@ export function counterAdd(count){
 		count: count
 	}
 }
-// -----------------------
-// export function counterTick(){
-// 	return(dispatch) => {
-// 		const newCount = store.getState().count ++
-// 		return dispatch(counterAdd(newCount))
-// 	}
-// } 
-
-// export function setSelectedPortfolio(id){
-// 	return{
-// 		type:"SET_SELECTED_PORTFOLIO",
-// 		selected_portfolio: id
-// 	}
-// }
-
-// -----------------------
-
-
-// export function versionOne(){
-// 	return async (dispatch) => {
-// 		// return await axios.get('https://min-api.cryptocompare.com/data/histoday?fsym=BTC&tsym=USD&limit=365&aggregate=1&e=CCCAGG&UTCHourDiff=-4').then((res) => {
-// 		let ticker_list = [{ ticker: 'BTC'}, { ticker: 'ETH'}]
-		
-// 		let hist_payload = []
-		
-
-// 		for (let index = 0; index < ticker_list.length; index++) {
-// 			// await callback(ticker_list[index], index, array)
-// 			hist_payload = await axios.get('https://min-api.cryptocompare.com/data/histoday?fsym=BTC&tsym=USD&limit=365&aggregate=1&e=CCCAGG&UTCHourDiff=-4')
-// 			console.log(index)
-// 			.then((res) => {
-// 				let tempData = res.data.Data.map( (item) => {
-// 					const date = moment.unix(item.time).format('YYYY-MM-DD')
-// 					return { date: date, close: item.close } 
-// 				})
-				
-				
-// 			})
-			
-// 		}
-
-
-
-// 			return dispatch(updatePriceHist(hist_payload))
-// 	}
-// }
-
-
-
-
 
 // -----------------------
 export function fetchPrice(ticker){
@@ -119,135 +54,6 @@ export function updatePrice(amount){
 		btc_price:amount
 	}
 }
-
-
-
-
-
-
-// export const refreshList = list => (dispatch) => {
-// 	let ticker_list = [{ ticker: 'BTC'}, { ticker: 'ETH'}]
-// 	let hist_payload = []
-// 	return Promise.all(ticker_list.map((item, hist_payload) => {
-// 	  	const url = `https://api.coinbase.com/v2/prices/${item.ticker}-USD/spot`
-// 	  	return axios.get(url)
-// 			.then(({ data }) => {
-// 		  	// data.uniqueId = version.uniqueId;
-// 			//   data.refreshId = uuidv1();
-// 				console.log("item.ticker: ", item.ticker)
-// 				// hist_payload.push(data)
-// 				dispatch(updateRefreshList({ item.ticker, data }));
-// 			})
-// 			.catch((e) => {
-// 				console.log(e)
-// 			})
-// 	}))
-// }
-
-// export function updateRefreshList(ticker, history){
-//     return{
-// 		type:"UPDATE_REFRESH_HIST",
-// 		payload: { ticker: ticker.ticker,
-//         historical_price_data: history
-//     }
-// }
-
-
-
-// async function asyncForEach(array, callback) {
-// 	for (let index = 0; index < array.length; index++) {
-// 	  await callback(array[index], index, array)
-// 	}
-//   }
-  
-// export  const start = async () => {
-// 	await asyncForEach([{ ticker: 'BTC'}, { ticker: 'ETH'}], async (item) => {
-// 	//   await waitFor(50)
-// 	  console.log(item)
-// 	})
-// 	console.log('Done')
-//   }
-
-
-
-export function fetchPriceHist(){
-	return async (dispatch) => {
-		return await axios.get('https://min-api.cryptocompare.com/data/histoday?fsym=BTC&tsym=USD&limit=365&aggregate=1&e=CCCAGG&UTCHourDiff=-4').then((res) => {
-		let tempData = res.data.Data.map( (item) => {
-				const date = moment.unix(item.time).format('YYYY-MM-DD')
-				return { date: date, close: item.close } 
-				// return { [date]: item.close } 
-				// return tempData[date] = item.close
-			})
-			
-			// console.log("tempData: ", tempData)
-			dispatch(updatePriceHist(tempData));
-
-			// let tempPrice = 0
-			// let tempDate = null
-			// for (let i = tempData.length-1; i >= 0; i--) {
-			// 	if (tempPrice < tempData[i].close) {
-			// 		tempDate = tempData[i].date
-			// 		tempPrice = tempData[i].close
-			// 	}
-			// }
-
-
-		})
-	}
-}
-
-
-
-
-
-
-
-
-
-
-
-// export function newfetchPriceHist(){
-// 	return async (dispatch) => {
-// 		const ticker = 'BTC'
-// 		const days = 7
-// 		let ticker_list = [{ ticker: 'BTC'}, { ticker: 'ETH'}]
-
-// 		let data = []
-
-// 		data = ticker_list.map((item) => {
-// 			console.log(item.ticker)
-// 			return 
-// 		})
-// 		// for (let value of ticker_list) {
-// 			// data.push(tempData)
-// 			// await axios.get(`https://min-api.cryptocompare.com/data/histoday?fsym=${ticker}&tsym=USD&limit=${days}&aggregate=1&e=CCCAGG`).then((res) => {
-// 			// 	let tempData = res.data.Data.map( (item) => {
-// 			// 		const date = moment.unix(item.time).format('YYYY-MM-DD')
-// 			// 		console.log({ date: date, close: item.close })
-// 			// 		return { date: date, close: item.close } 
-// 			// 		// return { [date]: item.close } 
-// 			// 		// return tempData[date] = item.close
-// 			// 	})
-				
-// 			// }
-// 		// return data	
-// 			// console.log("tempData: ", tempData)
-// 			// dispatch(updatePriceHist(data));
-
-// 			// let tempPrice = 0
-// 			// let tempDate = null
-// 			// for (let i = tempData.length-1; i >= 0; i--) {
-// 			// 	if (tempPrice < tempData[i].close) {
-// 			// 		tempDate = tempData[i].date
-// 			// 		tempPrice = tempData[i].close
-// 			// 	}
-// 			// }
-
-
-// 		})
-// 	}
-// }
 
 
 export function fetchNewPriceHist(ticker, days, agg){
@@ -328,14 +134,6 @@ export function updatePriceHist(history){
 
 // ----------------------
 
-// export function fetchBTCPrice(){
-// 	return(dispatch) => {
-// 		return axios.get('https://api.coinbase.com/v2/prices/BTC-USD/spot').then((res) => {
-// 			dispatch(updateBTCPrice(res.data.data.amount));
-// 			// console.log("BTC Price: ", res.data.data.amount)
-// 		})
-// 	}
-// }
 export async function fetchAllHist(){
 	return(dispatch) => {	
 	// const ticker_list = portfolios.inception_allocations.map((item) => {
