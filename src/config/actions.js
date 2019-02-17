@@ -29,11 +29,23 @@ export function counterTick(){
 		return dispatch(counterAdd(newCount))
 	}
 }
-
 export function counterAdd(count){
 	return{
 		type:"COUNTER_ADD",
 		count: count
+	}
+}
+export function setSelectedFund(find_id){
+	// console.log("setSelectedFund: ", setSelectedFund)
+	return(dispatch) => {
+		// const newCount = store.getState().count ++
+		return dispatch(selectFund(find_id))
+	}
+}
+export function selectFund(id){
+	return{
+		type:"SELECT_FUND",
+		selected_portfolio: id
 	}
 }
 
@@ -59,16 +71,18 @@ export function updatePrice(amount){
 export function fetchNewPriceHist(ticker, days, agg){
 	return async (dispatch) => {
 		return await axios.get(`https://min-api.cryptocompare.com/data/histoday?fsym=${ticker}&tsym=USD&limit=${days}&aggregate=${agg}&e=CCCAGG`).then((res) => {
-			console.log("ticker: ", ticker)
+			// console.log("ticker: ", ticker)
 			if (store.getState().historical_price_data === null) {
 				// console.log("NULL!@#")
+				// console.log("res.data.Data", res.data.Data)
 				let payload = res.data.Data.map( (item) => {
 					const date = moment.unix(item.time).format('YYYY-MM-DD')
 					return { date: date, [ticker]: item.close } 
 				})
+				// console.log("payload ", payload)
 				dispatch(updatePriceHist( payload ));
 			} else {
-
+				// console.log("NOT NULL!@#")
 				let newData = store.getState().historical_price_data.map( (item) => {
 					let newItem = item		
 					for (var index of res.data.Data) {
@@ -77,36 +91,39 @@ export function fetchNewPriceHist(ticker, days, agg){
 							newItem[ticker] = index.close
 						}
 					}
-					return newItem
-				
-					 
+					return newItem 
 				})
-
-				// let newPayload = res.data.Data.map( (item, index) => {
-				// 	console.log("new payload")
-				// 	const date = moment.unix(item.time).format('YYYY-MM-DD')
-				// 	// return { date: date, [ticker]: item.close } 
-				// 	// existingData[index][ticker] = item.close
-					
-				// 	//take current date of new data, use it to looup array item propery
-				// 	//if the date is correct, return the
-
-				// 	// existingData[index] = { existingData[index].[ticker]: item.close }
-				// 	// return { [date]: item.close } 
-				// 	// return tempData[date] = item.close
-				// })
 				// console.log("newData: ", newData)
 				dispatch(updatePriceHist( newData ));
 			}
-				
-			
-			// let payload = {[ticker]: tempData}
-			// console.log("tempData: ", payload)
-			
-			
 		})
 	}
 }
+export function updatePriceHist(history){
+	// console.log("update price hist reducer")
+	// console.log("history", history)
+	return{
+		type:"UPDATE_PRICE_HIST",
+		historical_price_data: history
+	}
+}
+
+// ------------------------------------
+
+export function updateAllHist(history){
+	return {
+		type:"UPDATE_ALL_HIST",
+		historical_price_data: history
+	}
+}
+
+
+// export function updateAllHist(history){
+// 	return {
+// 		type:"UPDATE_ALL_HIST",
+// 		historical_price_data: history
+// 	}
+// }
 // dispatch(updatePriceHist( { [ticker]: tempData }));
 // dispatch(updatePriceHist(tempData));
 
@@ -121,17 +138,6 @@ export function fetchNewPriceHist(ticker, days, agg){
 // 		})
 // 	}
 // }
-
-
-export function updatePriceHist(history){
-	console.log("update price hist reducer")
-	console.log("history", history)
-    return{
-        type:"UPDATE_PRICE_HIST",
-        price_hist: history
-    }
-}
-
 // ----------------------
 
 export async function fetchAllHist(){
@@ -184,12 +190,6 @@ export async function fetchAllHist(){
 
 
 
-export function updateAllHist(history){
-    return {
-        type:"UPDATE_ALL_HIST",
-        historical_price_data: history
-    }
-}
 
 
 

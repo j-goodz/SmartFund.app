@@ -20,13 +20,8 @@ import { mainListItems, openListItems, closedListItems } from './ListItems';
 import SimpleLineChart from './SimpleLineChart';
 import SimpleTable from './SimpleTable';
 import moment from 'moment';
-
 import ListItems from './ListItems';
-
-
 import Stringify from 'react-stringify'
-
-
 import * as actionCreators from '../config/actions';
 import { connect } from 'react-redux';
 
@@ -110,8 +105,6 @@ const styles = theme => ({
   },
 });
 
-// console.log("Dashboard.js:111: ", mainListItems)
-
 class Dashboard extends React.Component {
   state = {
     open: true,
@@ -126,12 +119,34 @@ class Dashboard extends React.Component {
   };
 
   render() {
-            console.log(this.props.portfolios[this.props.selected_portfolio].inception_allocations)
+
+    
+            // console.log(this.props.portfolios[this.props.selected_portfolio].inception_allocations)
 // 
     const { classes } = this.props;
-    const portfolio_name = this.props.portfolios[this.props.selected_portfolio] 
-    console.log("portfolio_name: ", portfolio_name)
-    console.log("this.props.selected_portfolio: ", this.props.selected_portfolio)
+    // let selected_fund = null
+    // let fund_index = null
+    // let fund_name = null
+
+
+    // if ( this.props.selected_portfolio !== 0 ) {
+    //   fund_index = this.props.selected_portfolio 
+      
+    //   fund_name = this.props.portfolios[this.props.selected_portfolio].portfolio_name
+    //   selected_fund = this.props.selected_portfolio[fund_index]
+
+
+    // }
+    // console.log("portfolio_name: ", fund_name)
+    // console.log("fund_index: ", fund_index)
+    // console.log("selected_fund: ", selected_fund)
+
+    
+
+
+  
+
+    // console.log("this.props.selected_portfolio: ", this.props.selected_portfolio)
     return (
       
       <div className={classes.root}>
@@ -141,10 +156,7 @@ class Dashboard extends React.Component {
           className={classNames(classes.appBar, this.state.open && classes.appBarShift)}
         >
           <Toolbar disableGutters={!this.state.open} className={classes.toolbar}>
-            <IconButton
-              color="inherit"
-              aria-label="Open drawer"
-              onClick={this.handleDrawerOpen}
+            <IconButton color="inherit" aria-label="Open drawer" onClick={this.handleDrawerOpen}
               className={classNames(
                 classes.menuButton,
                 this.state.open && classes.menuButtonHidden,
@@ -152,37 +164,16 @@ class Dashboard extends React.Component {
             >
               <MenuIcon />
             </IconButton>
- 
             <IconButton color="inherit">
-                <InfoIcon />
+                {/* <InfoIcon /> */}
                 &nbsp;
-                <Typography
-                component="h1"
-                variant="h6"
-                color="inherit"
-                noWrap
-                className={classes.title}
-                >
-                Crypto Portfolio Factory
-                </Typography>
+                <Typography component="h1" variant="h4" color="inherit" noWrap className={classes.title}>SmartFund</Typography>
             </IconButton>
-
-
-            <Typography
-              component="h1"
-              variant="h6"
-              color="inherit"
-              align="right"
-              noWrap
-              className={classes.title}
-            >
-            <AccountBalanceWalletIcon />
+            <Typography component="h1" variant="h6" color="inherit" align="right" noWrap className={classes.title}  >
+              <AccountBalanceWalletIcon />
               &nbsp;Account: { this.props.mm_account }
             </Typography>
-
-
           </Toolbar>
-          {/* <ListItems /> */}
         </AppBar>
         <Drawer
           variant="permanent"
@@ -198,29 +189,43 @@ class Dashboard extends React.Component {
           </div>
           <Divider />
           <ListItems />
-          {/* <List>{mainListItems}</List>
-          <Divider />
-          <List>{openListItems}</List>
-          <Divider />
-          <List>{closedListItems}</List> */}
         </Drawer>
         <main className={classes.content}>
           <div className={classes.appBarSpacer} />
-          {/* <Typography variant="h4" gutterBottom component="h2">
-            { portfolio_name }
-          </Typography> */}
-          <Typography variant="h5" gutterBottom component="h2">
-            Historical Price (USD)
-          </Typography>
-          <Typography component="div" className={classes.chartContainer}>
-            <SimpleLineChart />
-          </Typography>
-          <Typography variant="h5" gutterBottom component="h2">
-            Asset Allocation
-          </Typography>
-          <div className={classes.tableContainer}>
-            <SimpleTable />
-          </div>
+
+          {/* { this.props.selected_portfolio === 0 ? ( console.log("this.props.selected_portfolio === ", this.props.selected_portfolio) ) : <h1>31231231231231321</h1> } */}
+          { this.props.selected_portfolio === -1  
+            ? 
+              <div>
+                {/* <br /> <br /> */}
+                {/* <h1>Add dashboard intro screen here with info</h1> */}
+                <Stringify value={this.props} />
+              </div> 
+            : 
+              <div>
+                <Typography variant="h4" gutterBottom component="h2">
+                  { this.props.portfolios[this.props.selected_portfolio].portfolio_name }
+                  {/* { selected_fund.portfolio_name } */}
+                </Typography>
+                <Typography variant="h6" gutterBottom component="h2">
+                  Created { moment.unix(this.props.portfolios[this.props.selected_portfolio].inception_date).format('lll') }
+                  {/* const date = moment.unix(item.time).format('YYYY-MM-DD') */}
+                </Typography>
+                <Typography variant="h6" gutterBottom component="h2">
+                  Price (USD)
+                </Typography>
+                <Typography component="div" className={classes.chartContainer}>
+                  <SimpleLineChart />
+                </Typography>
+                <Typography variant="h5" gutterBottom component="h2">
+                  Asset Allocation
+                </Typography>
+                <div className={classes.tableContainer}>
+                  <SimpleTable />
+                </div>
+              </div>
+            }
+
         </main>
       </div>
     );
@@ -231,25 +236,9 @@ Dashboard.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-
-// const mapStateToProps=(state) => {
-//   const { btc_price, eth_price, interval } = state
-//   return { btc_price, eth_price, interval }
-// };
-
 const mapStateToProps=(state) => {
-  const { btc_price, interval, count, portfolios, historical_price_data, price_hist, mm_account, selected_portfolio } = state
-  return { btc_price, interval, count, portfolios, historical_price_data, price_hist, mm_account, selected_portfolio }
-  // return state
+  const { portfolios, mm_account, selected_portfolio, historical_price_data } = state
+  return { portfolios, mm_account, selected_portfolio, historical_price_data }
 }
-
-// export default connect (state, actionCreators)(Dashboard);
-
-// connect(mapStateToProps, actionCreators)(Dashboard)
-
-
-
-// export default withStyles(styles, mapStateToProps, actionCreators)(Dashboard);
-// export default withStyles(styles)(Dashboard);
 
 export default connect(mapStateToProps, actionCreators)(withStyles(styles)(Dashboard));

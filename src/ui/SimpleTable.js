@@ -41,10 +41,7 @@ export class SimpleTable extends Component {
       // }
     }  
     
-    
     componentDidMount() {
-
-      
     }
 
     percIncrease(a, b) {
@@ -77,10 +74,10 @@ export class SimpleTable extends Component {
       
       data = this.props.portfolios[portfolio_id].inception_allocations.map((item) => {
         // console.log("item.amount * latest_prices[item.ticker]: ", item.amount * latest_prices[item.ticker])
-        // const book_value = item.price * item.amount
-        // const market_value = (item.amount * latest_prices[item.ticker]).toFixed(2)
-        // const percent_change = this.percIncrease( book_value, market_value) + "%"
-        // // const percent_change = (book_value / market_value ).toFixed(2)
+        const book_value = item.price * item.amount
+        const market_value = (item.amount * latest_prices[item.ticker]).toFixed(2)
+        const percent_change = this.percIncrease( book_value, market_value) + "%"
+        // const percent_change = (book_value / market_value ).toFixed(2)
         // (item.amount * latest_prices[item.ticker]).toFixed(2) + '%'
 
         // if (isNaN(item.price) {
@@ -90,10 +87,10 @@ export class SimpleTable extends Component {
           createData( 
             item.name,
             item.ticker, 
-            // item.amount,
-            // '$' + book_value,
-            // '$' + market_value, 
-            // percent_change  
+            item.amount,
+            '$' + book_value,
+            '$' + market_value, 
+            percent_change  
               
           )
         )

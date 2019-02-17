@@ -13,7 +13,7 @@ class Router extends React.Component {
 
     render() {
         const { classes } = this.props;
-    
+
         return (
         <Switch>
             {/* <Route exact path='/dashboard/' component={Dashboard} /> */}
@@ -27,11 +27,12 @@ class Router extends React.Component {
 
             <Route 
                 // exact  
-                path={process.env.PUBLIC_URL + '/dashboard/:id'}
+                // path={process.env.PUBLIC_URL + '/dashboard/:id'}
+                path={process.env.PUBLIC_URL + '/'}
                 render={
                     ({match}) => 
                         <Dashboard 
-                            match={match} 
+                            // match={match} 
                             account={this.state.account} 
                         />
                 } 
@@ -39,17 +40,10 @@ class Router extends React.Component {
 
             {/* <Route exact path='/dashboard/:id' component={Dashboard} /> */}
         </Switch>
-
         )
-
     }
 }
 
-
-// const Router = () => (
-// )
-
-  
 const mapStateToProps=(state) => {
     const { selected_portfolio } = state
     return { selected_portfolio }

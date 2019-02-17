@@ -37,7 +37,7 @@ import Stringify from 'react-stringify'
 // })
 
 
-
+const color_codes = ['#e6194b', '#3cb44b', '#4363d8', '#f58231', '#911eb4', '#46f0f0', '#f032e6', '#bcf60c', '#fabebe', '#008080', '#e6beff', '#9a6324', '#fffac8', '#800000', '#aaffc3', '#808000', '#ffd8b1', '#000075', '#808080', '#ffffff', '#000000']
 
 
 export class SimpleLineChart extends Component {
@@ -51,8 +51,9 @@ export class SimpleLineChart extends Component {
     
 
   render(){
-    const asset_data = this.props.portfolios[this.props.selected_portfolio].inception_allocations.map((item) => {  
-      return ( <Line type="monotone" dataKey={ item.ticker } stroke="#82ca9d" key={ item.id + item.ticker }/> )
+    const asset_data = this.props.portfolios[this.props.selected_portfolio].inception_allocations.map((item, index) => {  
+      // return ( <Line type="monotone" dataKey={ item.ticker } stroke="#82ca9d" key={ item.id + item.ticker }/> )
+      return ( <Line type="monotone" dataKey={ item.ticker } stroke={ color_codes[index] } key={ item.id + item.ticker }/> )
     })
     return (
       <ResponsiveContainer width="99%" height={320}>

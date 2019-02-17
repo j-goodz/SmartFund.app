@@ -4,7 +4,7 @@ let defaultState = {
 	mm_account: '0xf6e142f84EeBE8b533F97353dE1d3Cd39Cc272f3',
 	portfolios: [
 		{
-			id: 1,
+			id: 0,
 			portfolio_name: 'First Portfolio',
 			inception_date: 1518238874,
 			close_date: 1549775747,
@@ -12,8 +12,6 @@ let defaultState = {
 			inception_fee: 0.1,
 			close_fee: 0.15,
 			status: 'closed',
-			chart_start_date: 1518238874,
-			chart_end_date: 1549775747,
 			inception_allocations: [
 				{
 					name: 'Bitcoin',
@@ -62,7 +60,7 @@ let defaultState = {
 			],
 		},
 		{
-			id: 2,
+			id: 1,
 			portfolio_name: 'Second Portfolio',
 			inception_date: 1518238874,
 			close_date: 1549775747,
@@ -118,7 +116,7 @@ let defaultState = {
 	// app settings
 	interval: 2,
 	count: 0,
-	selected_portfolio: 1, 
+	selected_portfolio: -1, 
 
 	// price data
 	historical_price_data: null,
@@ -137,10 +135,15 @@ const priceReducer = (state = defaultState, action) => {
 			...state,
 			eth_price: action.eth_price
 		}
-	} else if(action.type === 'UPDATE_ETH_PRICE') {
+	} else if(action.type === 'SELECT_FUND') {
 		return{
 			...state,
-			eth_price: action.eth_price
+			selected_portfolio: action.selected_portfolio
+		}
+	} else if(action.type === 'UPDATE_PRICE_HIST') {
+		return{
+			...state,
+			historical_price_data: action.historical_price_data
 		}
 	} else {
 		return{

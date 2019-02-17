@@ -48,9 +48,10 @@ class App extends Component {
       // await this.props.fetchNewPriceHist('BCH', 3, 1) 
       
 
-      for (var index of this.props.portfolios[this.props.selected_portfolio].inception_allocations) {
+      for (var index of this.props.portfolios[0].inception_allocations) {
         // console.log(this.props.portfolios[this.props.selected_portfolio].inception_allocations)
-        await this.props.fetchNewPriceHist(index.ticker, 40, 1)
+        // await this.props.fetchNewPriceHist(index.ticker, 40, 1)
+        this.props.fetchNewPriceHist(index.ticker, 40, 1)
       }
       // await this.props.fetchNewPriceHist("BTC", 1000, 30)
       // await this.props.fetchNewPriceHist("BTC", 1000, 30)
@@ -94,7 +95,7 @@ class App extends Component {
       <div>
         <Navigation />
         <Router />
-        <Stringify value={this.props} />
+        {/* <Stringify value={this.props} /> */}
       </div>
 
     );
