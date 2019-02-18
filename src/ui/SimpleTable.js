@@ -77,7 +77,7 @@ export class SimpleTable extends Component {
         const market_value = (item.amount * this.props.spot_price.RAW[item.ticker][this.props.local_currency].PRICE).toFixed(2)
         const percent_change = this.percIncrease( book_value, market_value) + "%"
         let coin_name 
-        console.log("this.props.coin_data ", this.props.coin_data)
+        // console.log("this.props.coin_data ", this.props.coin_data)
         if ( this.props.coin_data !== null ) { 
           coin_name = Object.values(this.props.coin_data).map((coin_item) => {
             if(coin_item.Symbol === item.ticker){
