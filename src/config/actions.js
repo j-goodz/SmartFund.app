@@ -62,9 +62,13 @@ export function selectUI(ui){
 // =====================================================================
 export function fetchNewPriceHist(ticker, days, agg){
 	return async (dispatch) => {
-		return await axios.get(`https://min-api.cryptocompare.com/data/histoday?fsym=${ticker}&tsym=USD&limit=${days}&aggregate=${agg}&e=CCCAGG&api_key=a5e3152003c8110c8bee2bba417ab3f3b7d8b82fbade524a0b13adcc3e1b1792`,
-		// {headers: {'Access-Control-Allow-Origin': 'http://localhost:3000/'}}
-		{ crossdomain: true }
+		return await axios.get(`https://cors.io/?https://min-api.cryptocompare.com/data/histoday?fsym=${ticker}&tsym=USD&limit=${days}&aggregate=${agg}&e=CCCAGG&api_key=a5e3152003c8110c8bee2bba417ab3f3b7d8b82fbade524a0b13adcc3e1b1792`, 
+		// {
+		// 	method: 'GET',
+		// 	mode: 'cors',
+		// 	headers: { 'Access-Control-Allow-Origin': * },
+		// }
+		// { crossdomain: true }
 		).then((res) => {
 			if (store.getState().historical_price_data === null) {
 				let payload = res.data.Data.map( (item) => {
@@ -98,7 +102,13 @@ export function updatePriceHist(history){
 // =====================================================================
 export function fetchCoinData(){
 	return async (dispatch) => {
-		return await axios.get(`https://min-api.cryptocompare.com/data/all/coinlist`,{ crossdomain: true }).then( (res) => {
+		return await axios.get(`https://cors.io/?https://min-api.cryptocompare.com/data/all/coinlist`,
+		// {
+		// 	method: 'GET',
+		// 	mode: 'cors',
+		// 	headers: { 'Access-Control-Allow-Origin': * },
+		// }
+		).then( (res) => {
 			const payload = []	
 			for (let item of Object.values(res.data.Data)) {
 				if(item.SortOrder <= store.getState().coin_limit) {
@@ -138,8 +148,12 @@ export function fetchCoinSpot(){
 		const ticker_string = ticker_list.toString()
 		// console.log("ticker_string", ticker_string)
 		return await axios.get(
-			`https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${ticker_string}&tsyms=${store.getState().spot_pairs.toString()}`,
-			{ crossdomain: true }
+			`https://cors.io/?https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${ticker_string}&tsyms=${store.getState().spot_pairs.toString()}`,
+			// {
+			// 	method: 'GET',
+			// 	mode: 'cors',
+			// 	headers: { 'Access-Control-Allow-Origin': * },
+			// }
 		).then( (res) => {
 			// const payload = []	
 			// for (let item of Object.values(res.data.Data)) {
