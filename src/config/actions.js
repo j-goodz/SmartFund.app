@@ -35,10 +35,9 @@ export function counterAdd(count){
 		count: count
 	}
 }
+// =====================================================================
 export function setSelectedFund(find_id){
-	// console.log("setSelectedFund: ", setSelectedFund)
 	return(dispatch) => {
-		// const newCount = store.getState().count ++
 		return dispatch(selectFund(find_id))
 	}
 }
@@ -48,41 +47,29 @@ export function selectFund(id){
 		selected_portfolio: id
 	}
 }
-
-// -----------------------
-export function fetchPrice(ticker){
-	console.log("FetchPriceHist called!")
+// =====================================================================
+export function selectUiInterface(selected_ui){
 	return(dispatch) => {
-		return axios.get(`https://api.coinbase.com/v2/prices/${ticker}-USD/spot`).then((res) => {
-			dispatch(updatePrice(res.data.data.amount));
-			// console.log("BTC Price: ", res.data.data.amount)
-		})
+		return dispatch(selectUI(selected_ui))
 	}
 }
-
-export function updatePrice(amount){
+export function selectUI(ui){
 	return{
-		type:"UPDATE_PRICE",
-		btc_price:amount
+		type:"SELECT_UI",
+		active_ui: ui
 	}
 }
-
-
+// =====================================================================
 export function fetchNewPriceHist(ticker, days, agg){
 	return async (dispatch) => {
-		return await axios.get(`https://min-api.cryptocompare.com/data/histoday?fsym=${ticker}&tsym=USD&limit=${days}&aggregate=${agg}&e=CCCAGG`).then((res) => {
-			// console.log("ticker: ", ticker)
+		return await axios.get(`https://min-api.cryptocompare.com/data/histoday?fsym=${ticker}&tsym=USD&limit=${days}&aggregate=${agg}&e=CCCAGG&api_key=a5e3152003c8110c8bee2bba417ab3f3b7d8b82fbade524a0b13adcc3e1b1792`).then((res) => {
 			if (store.getState().historical_price_data === null) {
-				// console.log("NULL!@#")
-				// console.log("res.data.Data", res.data.Data)
 				let payload = res.data.Data.map( (item) => {
 					const date = moment.unix(item.time).format('YYYY-MM-DD')
 					return { date: date, [ticker]: item.close } 
 				})
-				// console.log("payload ", payload)
 				dispatch(updatePriceHist( payload ));
 			} else {
-				// console.log("NOT NULL!@#")
 				let newData = store.getState().historical_price_data.map( (item) => {
 					let newItem = item		
 					for (var index of res.data.Data) {
@@ -93,29 +80,149 @@ export function fetchNewPriceHist(ticker, days, agg){
 					}
 					return newItem 
 				})
-				// console.log("newData: ", newData)
 				dispatch(updatePriceHist( newData ));
 			}
 		})
 	}
 }
 export function updatePriceHist(history){
-	// console.log("update price hist reducer")
-	// console.log("history", history)
 	return{
 		type:"UPDATE_PRICE_HIST",
 		historical_price_data: history
 	}
 }
-
 // ------------------------------------
+// =====================================================================
+export function fetchCoinData(){
+	return async (dispatch) => {
+		return await axios.get(`https://min-api.cryptocompare.com/data/all/coinlist`).then( (res) => {
+			const payload = []	
+			for (let item of Object.values(res.data.Data)) {
+				if(item.SortOrder <= store.getState().coin_limit) {
+					payload.push(item)
+				}
+			}
+			dispatch(updateCoinData( payload ));
+		})
 
-export function updateAllHist(history){
-	return {
-		type:"UPDATE_ALL_HIST",
-		historical_price_data: history
 	}
 }
+export function updateCoinData(payload){
+	return{
+		type:"UPDATE_COIN_DATA",
+		coin_data: payload
+	}
+}
+// =====================================================================
+export function fetchCoinSpot(){
+	return async (dispatch) => {
+
+		let ticker_list = []
+		for (let portfolio of store.getState().portfolios) {
+			for (let portfolio_asset of portfolio.inception_allocations ) {
+				if(	ticker_list.includes(portfolio_asset.ticker) === false	) {
+					ticker_list.push(portfolio_asset.ticker)
+				}
+			}
+		}
+		
+		for (let item of Object.values(store.getState().coin_data)) {
+			if(	ticker_list.includes(item.Symbol) === false	) {
+				ticker_list.push(item.Symbol)
+			}
+		}
+		// console.log("ticker list ", ticker_list)
+		const ticker_string = ticker_list.toString()
+		// console.log("ticker_string", ticker_string)
+		return await axios.get(`https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${ticker_string}&tsyms=${store.getState().spot_pairs.toString()}`).then( (res) => {
+			// const payload = []	
+			// for (let item of Object.values(res.data.Data)) {
+			// 	console.log("item ", item)
+			// 	// 	// if(item.SortOrder <= store.getState().coin_limit) {
+			// // 	// 	payload.push(item)
+			// // 	// }
+			// }
+			// const payload = res.data
+			dispatch(updateCoinSpot( res.data ));
+		})
+	}
+}
+export function updateCoinSpot(payload){
+	return{
+		type:"UPDATE_COIN_SPOT",
+		spot_price: payload
+	}
+}
+// =====================================================================
+export function fetchUsersPriceHist(){
+	return async (dispatch) => {
+		const current_date = moment()
+		const start_date = moment.unix(store.getState().data_start_date)
+		const days = current_date.diff(start_date, 'days', false)
+		const aggregate = store.getState().aggregate
+		const rows = (days + 1 / aggregate).toFixed(0)
+		let ticker_list = []
+		for (let portfolio of store.getState().portfolios) {
+			for (let portfolio_asset of portfolio.inception_allocations ) {
+				if(	ticker_list.includes(portfolio_asset.ticker) === false	) {
+					ticker_list.push(portfolio_asset.ticker)
+				}
+			}
+		}
+		// console.log("ticker list ", ticker_list)
+			for (let ticker of ticker_list) {
+			dispatch(fetchNewPriceHist(ticker, rows, aggregate))
+		}
+	}
+}
+
+// =====================================================================
+export function setDataLoaded(){
+	return async (dispatch) => {
+		dispatch(updateCoinData( true ))
+	}
+		
+}
+export function DataLoaded(data){
+	return{
+		type:"UPDATE_DATA_LOADED",
+		data: data
+	}
+}
+// ------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// const portfolios = store.getState().portfolios
+// const start_date = 1518238874
+// const end_date = 1549775747
+// const limit = 365
+// let price_data = null
+
+	
+												
+												
+
+
+
+
+// =====================================================================
+// =====================================================================
+// =====================================================================
+// =====================================================================
+// =====================================================================
+
 
 
 // export function updateAllHist(history){
@@ -124,67 +231,37 @@ export function updateAllHist(history){
 // 		historical_price_data: history
 // 	}
 // }
-// dispatch(updatePriceHist( { [ticker]: tempData }));
-// dispatch(updatePriceHist(tempData));
 
-// export async function fetchHist(ticker, days){
-// 	return async (dispatch) => {
-// 		return await axios.get(`https://min-api.cryptocompare.com/data/histoday?fsym=${ticker}&tsym=USD&limit=${days}&aggregate=1&e=CCCAGG`).then((res) => {
-// 		let tempData = res.data.Data.map( (item) => {
-// 				const date = moment.unix(item.time).format('YYYY-MM-DD')
-// 				return { date: date, unix_date: item.time, close: item.close } 
-// 			})
-// 			dispatch (updatePriceHist(tempData));
+
+
+
+
+// export function fetchPrice(ticker){
+// 	console.log("FetchPriceHist called!")
+// 	return(dispatch) => {
+// 		return axios.get(`https://api.coinbase.com/v2/prices/${ticker}-USD/spot`).then((res) => {
+// 			dispatch(updatePrice(res.data.data.amount));
+// 			// console.log("BTC Price: ", res.data.data.amount)
 // 		})
 // 	}
 // }
-// ----------------------
+// export function updatePrice(amount){
+// 	return{
+// 		type:"UPDATE_PRICE",
+// 		btc_price:amount
+// 	}
+// }
 
-export async function fetchAllHist(){
-	return(dispatch) => {	
-	// const ticker_list = portfolios.inception_allocations.map((item) => {
-		// 	return item.ticker
-		// })
-		
-		// const data = await this.fetchHist('BTC', 10)
-		
-		return  (dispatch) => {
-			// return async (dispatch) => {
-				const portfolios = store.getState().portfolios
-				const start_date = 1518238874
-				const end_date = 1549775747
-				const limit = 365
-				let price_data = null
-			// const ticker = 'BTC'
-			
-			// // for (let allocation_item of ticker_list) {
-				
-			// return 	console.log(store.getState().portfolios)
-		// 	for (let allocation_item in portfolios.inception_allocations) {
-		// 		const ticker = allocation_item.ticker
-		// 		// console.log(ticker)
-		// 	// const history_payload = await axios.get(`https://min-api.cryptocompare.com/data/histoday?fsym=${ticker}&tsym=USD&limit=${limit}&aggregate=1&e=CCCAGG`).then((res) => {
-		// // 		let tempData = res.data.Data.map( (item) => {
-		// // 			const date = moment.unix(item.time).format('YYYY-MM-DD')
-		// // 			return { date: date, unix_date: item.time, close: item.close } 
-		// // 		})
-			dispatch(updateAllHist(portfolios));
-			}
-			// dispatch(updateAllHist(portfolios));
 
-	}
-	
-	
-		
 
-		// 	})
-			
-		// })
-		
-		// console.log("tempData: ", tempData)
-		// return
-	// }
-}
+
+
+
+
+
+
+
+
 
 
 

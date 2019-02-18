@@ -25,7 +25,7 @@ class Router extends React.Component {
             />
  */}
 
-            <Route 
+            {/* <Route 
                 // exact  
                 // path={process.env.PUBLIC_URL + '/dashboard/:id'}
                 path={process.env.PUBLIC_URL + '/'}
@@ -36,9 +36,10 @@ class Router extends React.Component {
                             account={this.state.account} 
                         />
                 } 
-            />
+            /> */}
 
-            {/* <Route exact path='/dashboard/:id' component={Dashboard} /> */}
+            <Route exact path={process.env.PUBLIC_URL + '/'} component={Dashboard} />
+            {/* <Route exact path={process.env.PUBLIC_URL + '/'} component={Dashboard} /> */}
         </Switch>
         )
     }

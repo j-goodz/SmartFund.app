@@ -1,11 +1,11 @@
 {
-  "main.js": "/SmartFund.app/static/js/main.acb2bbdc.chunk.js",
-  "main.js.map": "/SmartFund.app/static/js/main.acb2bbdc.chunk.js.map",
-  "static/js/1.cc96bce4.chunk.js": "/SmartFund.app/static/js/1.cc96bce4.chunk.js",
-  "static/js/1.cc96bce4.chunk.js.map": "/SmartFund.app/static/js/1.cc96bce4.chunk.js.map",
-  "runtime~main.js": "/SmartFund.app/static/js/runtime~main.ecf383c3.js",
-  "runtime~main.js.map": "/SmartFund.app/static/js/runtime~main.ecf383c3.js.map",
-  "index.html": "/SmartFund.app/index.html",
-  "precache-manifest.06e2652fcf5b55ba317f57a0f9a8c03d.js": "/SmartFund.app/precache-manifest.06e2652fcf5b55ba317f57a0f9a8c03d.js",
-  "service-worker.js": "/SmartFund.app/service-worker.js"
+  "main.js": "/static/js/main.baf91024.chunk.js",
+  "main.js.map": "/static/js/main.baf91024.chunk.js.map",
+  "static/js/1.cc96bce4.chunk.js": "/static/js/1.cc96bce4.chunk.js",
+  "static/js/1.cc96bce4.chunk.js.map": "/static/js/1.cc96bce4.chunk.js.map",
+  "runtime~main.js": "/static/js/runtime~main.229c360f.js",
+  "runtime~main.js.map": "/static/js/runtime~main.229c360f.js.map",
+  "index.html": "/index.html",
+  "precache-manifest.1c51763ce9a42f8e784f9e70d3550c0e.js": "/precache-manifest.1c51763ce9a42f8e784f9e70d3550c0e.js",
+  "service-worker.js": "/service-worker.js"
 }

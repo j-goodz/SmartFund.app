@@ -21,6 +21,8 @@ import SimpleLineChart from './SimpleLineChart';
 import SimpleTable from './SimpleTable';
 import moment from 'moment';
 import ListItems from './ListItems';
+import FundCard from './FundCard';
+import FundList from './FundList';
 import Stringify from 'react-stringify'
 import * as actionCreators from '../config/actions';
 import { connect } from 'react-redux';
@@ -200,6 +202,8 @@ class Dashboard extends React.Component {
                 {/* <br /> <br /> */}
                 {/* <h1>Add dashboard intro screen here with info</h1> */}
                 <Stringify value={this.props} />
+                {/* <FundList /> */}
+                {/* <FundCard /> */}
               </div> 
             : 
               <div>
@@ -225,7 +229,6 @@ class Dashboard extends React.Component {
                 </div>
               </div>
             }
-
         </main>
       </div>
     );

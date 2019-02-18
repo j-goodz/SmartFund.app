@@ -1,12 +1,14 @@
+import Dashboard from "../ui/Dashboard";
 
 let defaultState = {
 	// user details
 	mm_account: '0xf6e142f84EeBE8b533F97353dE1d3Cd39Cc272f3',
+	smartfund_contract: '',
 	portfolios: [
 		{
 			id: 0,
 			portfolio_name: 'First Portfolio',
-			inception_date: 1518238874,
+			inception_date: 1546300800,
 			close_date: 1549775747,
 			funding_account: '0xf6e142f84EeBE8b533F97353dE1d3Cd39Cc272f3ll',
 			inception_fee: 0.1,
@@ -16,31 +18,31 @@ let defaultState = {
 				{
 					name: 'Bitcoin',
 					ticker: 'BTC',
-					price: 4282,
+					price: 8911.35,
 					amount: 0.62,
 				},
 				{
 					name: 'Ether',
 					ticker: 'ETH',
-					price: 200,
+					price: 559.91,
 					amount: 0.46,
 				},
 				{
 					name: 'Bitcoin Cash',
 					ticker: 'BCH',
-					price: 153,
+					price: 1031.78,
 					amount: 6.62,
 				},
 				{
 					name: 'Ether Classic',
 					ticker: 'ETC',
-					price: 33,
+					price: 19.56,
 					amount: 0.16,
 				},
 				{
 					name: 'Litecoin',
 					ticker: 'LTC',
-					price: 14,
+					price: 168.71,
 					amount: 0.16,
 				},
 			],
@@ -62,37 +64,35 @@ let defaultState = {
 		{
 			id: 1,
 			portfolio_name: 'Second Portfolio',
-			inception_date: 1518238874,
+			inception_date: 1546300800,
 			close_date: 1549775747,
 			funding_account: '0xf6e142f84EeBE8b533F97353dE1d3Cd39Cc272f3ll',
 			inception_fee: 0.1,
 			close_fee: 0.15,
 			status: 'open',
-			chart_start_date: 1518238874,
-			chart_end_date: 1549775747,
 			inception_allocations: [
 				{
 					name: 'Bitcoin',
 					ticker: 'BTC',
-					price: 4282,
+					price: 8911.35,
 					amount: 0.62,
 				},
 				{
 					name: 'Ether',
 					ticker: 'ETH',
-					price: 200,
+					price: 559.91,
 					amount: 0.46,
 				},
 				{
 					name: 'Bitcoin Cash',
 					ticker: 'BCH',
-					price: 153,
+					price: 1031.78,
 					amount: 6.62,
 				},
 				{
 					name: 'Ether Classic',
 					ticker: 'ETC',
-					price: 33,
+					price: 19.56,
 					amount: 0.16,
 				},
 			],
@@ -114,13 +114,24 @@ let defaultState = {
 	],
 	
 	// app settings
+	data_loaded: false,
+	//timer 
 	interval: 2,
 	count: 0,
+	
+	// UI Settings
 	selected_portfolio: -1, 
-
+	active_ui: 'dashboard',
 	// price data
+	coin_limit: 10,
 	historical_price_data: null,
+	coin_data: null,
 	spot_price: null,
+	data_start_date: 1546300800,
+	aggregate: 7,
+	spot_pairs: ['USD','EUR','CAD','GBP','JPY'],
+	local_currency: 'USD',
+	
 }
 
 const priceReducer = (state = defaultState, action) => {
@@ -130,15 +141,30 @@ const priceReducer = (state = defaultState, action) => {
 			...state,
 			btc_price: action.btc_price
 		} 
-	} else if(action.type === 'UPDATE_ETH_PRICE') {
+	} else if(action.type === 'UPDATE_COIN_DATA') {
 		return{
 			...state,
-			eth_price: action.eth_price
+			coin_data: action.coin_data
+		}
+	} else if(action.type === 'UPDATE_COIN_SPOT') {
+		return{
+			...state,
+			spot_price: action.spot_price
 		}
 	} else if(action.type === 'SELECT_FUND') {
 		return{
 			...state,
 			selected_portfolio: action.selected_portfolio
+		}
+	} else if(action.type === 'SELECT_UI') {
+		return{
+			...state,
+			active_ui: action.active_ui
+		}
+	} else if(action.type === 'UPDATE_DATA_LOADED') {
+		return{
+			...state,
+			data_loaded: action.data
 		}
 	} else if(action.type === 'UPDATE_PRICE_HIST') {
 		return{

@@ -54,7 +54,7 @@ export class ListItems extends Component {
               {/* <NavLink to='/'><ListItemText primary="Dashboard" /></NavLink> */}
                 <ListItemText primary="Dashboard" />
               </ListItem>
-            <ListItem button>
+            <ListItem button onClick={() => { this.props.selectUiInterface('newfund')}}>
             <ListItemIcon>
               <AddBoxtIcon />
             </ListItemIcon>

@@ -23,14 +23,11 @@ const styles = {
   },
 };
 
-
 let id = 0;
-function createData(name, ticker, initial_amount, book_value, market_value, change) {
+function createData(name, ticker, initial_amount, initial_price, book_value, market_value, change) {
   id += 1;
-  return { id, name, ticker, initial_amount, book_value, market_value, change };
+  return { id, name, ticker, initial_amount, initial_price, book_value, market_value, change };
 }
-
-
 
 export class SimpleTable extends Component {
   constructor(props) {
@@ -60,46 +57,47 @@ export class SimpleTable extends Component {
       
   render() {    
     const { classes } = this.props
-    const portfolio_id = this.props.selected_portfolio      
+    const portfolio_id = this.props.selected_portfolio    
     const current_date = moment().format("YYYY-MM-DD").toString()
     let latest_prices = null
     let data = []
 
-    if (this.props.historical_price_data !== null) {
-      for (let item of this.props.historical_price_data) {
-        if ( current_date === item.date ) {
-          latest_prices = item
-        }
-      }
-      
-      data = this.props.portfolios[portfolio_id].inception_allocations.map((item) => {
-        // console.log("item.amount * latest_prices[item.ticker]: ", item.amount * latest_prices[item.ticker])
-        const book_value = item.price * item.amount
-        const market_value = (item.amount * latest_prices[item.ticker]).toFixed(2)
-        const percent_change = this.percIncrease( book_value, market_value) + "%"
-        // const percent_change = (book_value / market_value ).toFixed(2)
-        // (item.amount * latest_prices[item.ticker]).toFixed(2) + '%'
+      // console.log("portfolio_id: ", portfolio_id)
+      // console.log("current_date: ", current_date)
+      // console.log("this.props.historical_price_data: ", this.props.historical_price_data)
+    // console.log("this.props.local_currency: ", this.props.local_currency)
+    // console.log("this.props.spot_price: ", this.props.spot_price)
+    // console.log("this.props.spot_price.RAW: ", this.props.spot_price.RAW)
+    // console.log("this.props.spot_price.RAW.BTC: ", this.props.spot_price.RAW['BTC'])
+    // console.log("this.props.spot_price.RAW.BTC.USD: ", this.props.spot_price.RAW['BTC'][this.props.local_currency])
+    // console.log("this.props.spot_price.RAW.BTC.USD.PRICE: ", this.props.spot_price.RAW['BTC'][this.props.local_currency].PRICE)
 
-        // if (isNaN(item.price) {
-        //   return
-        // }
+      data = this.props.portfolios[portfolio_id].inception_allocations.map((item) => {
+        const book_value = (item.price * item.amount).toFixed(2)
+        const market_value = (item.amount * this.props.spot_price.RAW[item.ticker][this.props.local_currency].PRICE).toFixed(2)
+        const percent_change = this.percIncrease( book_value, market_value) + "%"
+        let coin_name 
+        console.log("this.props.coin_data ", this.props.coin_data)
+        if ( this.props.coin_data !== null ) { 
+          coin_name = Object.values(this.props.coin_data).map((coin_item) => {
+            if(coin_item.Symbol === item.ticker){
+              return coin_item.CoinName
+            }
+          })
+        }
+
         return (
           createData( 
-            item.name,
+            coin_name,
             item.ticker, 
             item.amount,
+            '$' + item.price,
             '$' + book_value,
             '$' + market_value, 
             percent_change  
-              
           )
         )
       })
-
-    }
-    
-
-
 
     return (
       <Paper className={classes.root}>
@@ -109,8 +107,9 @@ export class SimpleTable extends Component {
               <TableCell>Crypto Asset</TableCell>
               <TableCell align="center">Ticker</TableCell>
               <TableCell align="center">Initial Amount</TableCell>
-              <TableCell align="right">Book Value</TableCell>
-              <TableCell align="right">Market Value</TableCell>
+              <TableCell align="center">Initial Price ({this.props.local_currency})</TableCell>
+              <TableCell align="right">Book Value ({this.props.local_currency})</TableCell>
+              <TableCell align="right">Market Value ({this.props.local_currency})</TableCell>
               <TableCell align="right">% Change</TableCell>
             </TableRow>
           </TableHead>
@@ -122,6 +121,7 @@ export class SimpleTable extends Component {
                 </TableCell>
                 <TableCell align="center">{n.ticker}</TableCell>
                 <TableCell align="center">{n.initial_amount} {n.ticker}</TableCell>
+                <TableCell align="center">{n.initial_price} per {n.ticker}</TableCell>
                 <TableCell align="right">{n.book_value}</TableCell>
                 <TableCell align="right">{n.market_value}</TableCell>
                 <TableCell align="right">{n.change}</TableCell>
@@ -141,8 +141,8 @@ SimpleTable.propTypes = {
 
 
 const mapStateToProps=(state) => {
-  const { portfolios, historical_price_data, selected_portfolio } = state
-  return { portfolios, historical_price_data, selected_portfolio }
+  const { portfolios, historical_price_data, selected_portfolio, spot_price, local_currency, coin_data } = state
+  return { portfolios, historical_price_data, selected_portfolio, spot_price, local_currency, coin_data }
 }
 
 export default connect(mapStateToProps, actionCreators)(withStyles(styles)(SimpleTable));
