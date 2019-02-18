@@ -32,9 +32,12 @@ class App extends Component {
     this.setState({timer})
     // await this.props.fetchCoinData().then( await this.pullHistoricalData() )
     await this.props.fetchCoinData() //.then( await this.pullHistoricalData() )
+    this.props.setDataLoaded('coin_data')
     // this.pullHistoricalData()
-    this.props.fetchUsersPriceHist()
-    this.props.fetchCoinSpot()
+    await this.props.fetchCoinSpot()
+    this.props.setDataLoaded('spot_price')
+    await this.props.fetchUsersPriceHist()
+    this.props.setDataLoaded('historical_price_data')
   }
   
   async pullHistoricalData() {
@@ -136,10 +139,15 @@ class App extends Component {
   }
 
   render() {
-    
+    // console.log("this.props.loaded_data", this.props.loaded_data)
+    if ( this.props.loaded_data.coin_data === false  || this.props.loaded_data.spot_price === false || this.props.loaded_data.historical_price_data === false ) {
+      return <div><h4>Loading your SmartFund data...please wait...</h4></div>
+    }
+
+
     // if (this.props.data_loaded === false && this.props.coin_data !== null) {
     //   this.pullHistoricalData()
-    // }
+    // } 
 
     return (
       <div>

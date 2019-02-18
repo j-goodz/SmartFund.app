@@ -114,7 +114,11 @@ let defaultState = {
 	],
 	
 	// app settings
-	data_loaded: false,
+	loaded_data: {
+		coin_data: false,
+		spot_price: false,
+		historical_price_data: false,
+	},
 	//timer 
 	interval: 2,
 	count: 0,
@@ -164,7 +168,7 @@ const priceReducer = (state = defaultState, action) => {
 	} else if(action.type === 'UPDATE_DATA_LOADED') {
 		return{
 			...state,
-			data_loaded: action.data
+			data_loaded: action.payload
 		}
 	} else if(action.type === 'UPDATE_PRICE_HIST') {
 		return{

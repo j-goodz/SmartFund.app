@@ -191,22 +191,37 @@ export function fetchUsersPriceHist(){
 		}
 		// console.log("ticker list ", ticker_list)
 			for (let ticker of ticker_list) {
+			
 			dispatch(fetchNewPriceHist(ticker, rows, aggregate))
 		}
+		// dispatch(setDataLoaded('coin_data'))
 	}
 }
 
 // =====================================================================
-export function setDataLoaded(){
+export function setDataLoaded(dataset){
 	return async (dispatch) => {
-		dispatch(updateCoinData( true ))
+		let payload = store.getState().loaded_data
+		// let payload = dataset 
+		// console.log("payload", payload)
+		if(dataset === 'coin_data') {
+			payload.coin_data = true
+		} else if (dataset === 'spot_price') {
+			payload.spot_price = true
+		} else if (dataset === 'historical_price_data') {
+			payload.historical_price_data = true
+		} else {
+			return
+		}
+
+		dispatch(dataLoaded( payload ))
 	}
 		
 }
-export function DataLoaded(data){
+export function dataLoaded(payload){
 	return{
 		type:"UPDATE_DATA_LOADED",
-		data: data
+		loaded_data: payload
 	}
 }
 // ------------------------------------
