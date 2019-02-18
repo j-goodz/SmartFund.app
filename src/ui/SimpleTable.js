@@ -107,7 +107,7 @@ export class SimpleTable extends Component {
               <TableCell>Crypto Asset</TableCell>
               <TableCell align="center">Ticker</TableCell>
               <TableCell align="center">Initial Amount</TableCell>
-              <TableCell align="center">Initial Price ({this.props.local_currency})</TableCell>
+              <TableCell align="center">Initial Price Per Unit({this.props.local_currency})</TableCell>
               <TableCell align="right">Book Value ({this.props.local_currency})</TableCell>
               <TableCell align="right">Market Value ({this.props.local_currency})</TableCell>
               <TableCell align="right">% Change</TableCell>

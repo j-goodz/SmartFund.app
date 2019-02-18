@@ -19,7 +19,8 @@
     "react-stringify": "^1.0.0",
     "recharts": "^1.4.2",
     "redux": "^4.0.1",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "web3": "^1.0.0-beta.46"
   },
   "scripts": {
     "start": "react-scripts start",

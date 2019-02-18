@@ -240,8 +240,8 @@ Dashboard.propTypes = {
 };
 
 const mapStateToProps=(state) => {
-  const { portfolios, mm_account, selected_portfolio, historical_price_data } = state
-  return { portfolios, mm_account, selected_portfolio, historical_price_data }
+  const { mm_account, selected_portfolio, } = state
+  return { mm_account, selected_portfolio,  }
 }
 
 export default connect(mapStateToProps, actionCreators)(withStyles(styles)(Dashboard));

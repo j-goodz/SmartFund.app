@@ -1,6 +1,7 @@
 import axios from 'axios';
 import store from './store'
 import moment from 'moment';
+import Web3 from 'web3';
 
 
 // // -----------------------
@@ -60,16 +61,82 @@ export function selectUI(ui){
 	}
 }
 // =====================================================================
+
+
+
+
+
+// export function setAccount(){
+	
+// 	let web3 = new Web3(window.web3.currentProvider)
+	
+
+// 	web3.currentProvider.publicConfigStore.on('update', data => {
+// 		if (data.selectedAddress) {
+// 		  store.dispatch({
+// 			type: 'ACCOUNT_CHANGE',
+// 			payload: {
+// 			  currentAccount: data.selectedAddress
+// 			}
+// 		  });
+// 		} else {
+// 		  store.dispatch({
+// 			type: 'ACCOUNT_LOGOUT'
+// 		  });
+// 		}
+// 	  })
+
+// 	// return(dispatch) => {
+// 	// 	return dispatch(updateAccount(selected_ui))
+// 	// }
+// }
+
+
+export function setAccount(account){
+	// console.log("setAccount!" , account)
+	return(dispatch) => {
+		return dispatch(updateAccount(account))
+	}
+}
+
+
+export function updateAccount(account){
+	// console.log("new_account!" , account)
+
+	return{
+		type:"ACCOUNT_CHANGE",
+		account: account
+	}
+}
+
+
+export function setWeb3(web3){
+	// console.log("setAccount!" , account)
+	return(dispatch) => {
+		return dispatch(updateWeb3(web3))
+	}
+}
+
+
+export function updateWeb3(web3){
+	return{
+		type:"UPDATE_WEB3",
+		web3: web3
+	}
+}
+
+
+// export function updateAccount(account){
+// 	return{
+// 		type:"UPDATE_ACCOUNT_LOGOUTACCOUNT",
+// 		// mm_account: account
+// 	}
+// }
+// =====================================================================
 export function fetchNewPriceHist(ticker, days, agg){
 	return async (dispatch) => {
-		return await axios.get(`https://cors.io/?https://min-api.cryptocompare.com/data/histoday?fsym=${ticker}&tsym=USD&limit=${days}&aggregate=${agg}&e=CCCAGG&api_key=a5e3152003c8110c8bee2bba417ab3f3b7d8b82fbade524a0b13adcc3e1b1792`, 
-		// {
-		// 	method: 'GET',
-		// 	mode: 'cors',
-		// 	headers: { 'Access-Control-Allow-Origin': * },
-		// }
-		// { crossdomain: true }
-		).then((res) => {
+		// return await axios.get(`https://cors.io/?https://min-api.cryptocompare.com/data/histoday?fsym=${ticker}&tsym=USD&limit=${days}&aggregate=${agg}&e=CCCAGG&api_key=a5e3152003c8110c8bee2bba417ab3f3b7d8b82fbade524a0b13adcc3e1b1792`).then((res) => {
+		return await axios.get(`https://min-api.cryptocompare.com/data/histoday?fsym=${ticker}&tsym=USD&limit=${days}&aggregate=${agg}&e=CCCAGG&api_key=a5e3152003c8110c8bee2bba417ab3f3b7d8b82fbade524a0b13adcc3e1b1792`).then((res) => {
 			if (store.getState().historical_price_data === null) {
 				let payload = res.data.Data.map( (item) => {
 					const date = moment.unix(item.time).format('YYYY-MM-DD')
@@ -88,6 +155,7 @@ export function fetchNewPriceHist(ticker, days, agg){
 					return newItem 
 				})
 				dispatch(updatePriceHist( newData ));
+				
 			}
 		})
 	}
@@ -102,12 +170,8 @@ export function updatePriceHist(history){
 // =====================================================================
 export function fetchCoinData(){
 	return async (dispatch) => {
-		return await axios.get(`https://cors.io/?https://min-api.cryptocompare.com/data/all/coinlist`,
-		// {
-		// 	method: 'GET',
-		// 	mode: 'cors',
-		// 	headers: { 'Access-Control-Allow-Origin': * },
-		// }
+		// return await axios.get(`https://cors.io/?https://min-api.cryptocompare.com/data/all/coinlist`
+		return await axios.get(`https://min-api.cryptocompare.com/data/all/coinlist`
 		).then( (res) => {
 			const payload = []	
 			for (let item of Object.values(res.data.Data)) {
@@ -116,8 +180,9 @@ export function fetchCoinData(){
 				}
 			}
 			dispatch(updateCoinData( payload ));
-		})
-
+			// dispatch(setDataLoaded('coin_data'))
+		}).then(dispatch(setDataLoaded('coin_data')))
+		//.then(dispatch(fetchCoinSpot()))
 	}
 }
 export function updateCoinData(payload){
@@ -128,43 +193,29 @@ export function updateCoinData(payload){
 }
 // =====================================================================
 export function fetchCoinSpot(){
+	let ticker_list = []
+	// console.log("store.getState().portfolios" , store.getState().portfolioss)
+	for (let portfolio of store.getState().portfolios) {
+		for (let portfolio_asset of portfolio.inception_allocations ) {
+			if(	ticker_list.includes(portfolio_asset.ticker) === false	) {
+				ticker_list.push(portfolio_asset.ticker)
+			}
+		}
+	}
+	
+	for (let item of Object.values(store.getState().coin_data)) {
+		if(	ticker_list.includes(item.Symbol) === false	) {
+			ticker_list.push(item.Symbol)
+		}
+	}
 	return async (dispatch) => {
-
-		let ticker_list = []
-		for (let portfolio of store.getState().portfolios) {
-			for (let portfolio_asset of portfolio.inception_allocations ) {
-				if(	ticker_list.includes(portfolio_asset.ticker) === false	) {
-					ticker_list.push(portfolio_asset.ticker)
-				}
-			}
-		}
-		
-		for (let item of Object.values(store.getState().coin_data)) {
-			if(	ticker_list.includes(item.Symbol) === false	) {
-				ticker_list.push(item.Symbol)
-			}
-		}
-		// console.log("ticker list ", ticker_list)
 		const ticker_string = ticker_list.toString()
-		// console.log("ticker_string", ticker_string)
 		return await axios.get(
-			`https://cors.io/?https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${ticker_string}&tsyms=${store.getState().spot_pairs.toString()}`,
-			// {
-			// 	method: 'GET',
-			// 	mode: 'cors',
-			// 	headers: { 'Access-Control-Allow-Origin': * },
-			// }
+			// `https://cors.io/?https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${ticker_string}&tsyms=${store.getState().spot_pairs.toString()}`,
+			`https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${ticker_string}&tsyms=${store.getState().spot_pairs.toString()}`
 		).then( (res) => {
-			// const payload = []	
-			// for (let item of Object.values(res.data.Data)) {
-			// 	console.log("item ", item)
-			// 	// 	// if(item.SortOrder <= store.getState().coin_limit) {
-			// // 	// 	payload.push(item)
-			// // 	// }
-			// }
-			// const payload = res.data
-			dispatch(updateCoinSpot( res.data ));
-		})
+			dispatch(updateCoinSpot( res.data ))
+		}).then(dispatch(setDataLoaded('spot_price')))
 	}
 }
 export function updateCoinSpot(payload){
@@ -193,8 +244,9 @@ export function fetchUsersPriceHist(){
 			for (let ticker of ticker_list) {
 			
 			dispatch(fetchNewPriceHist(ticker, rows, aggregate))
+			dispatch(setDataLoaded('historical_price_data'))
 		}
-		// dispatch(setDataLoaded('coin_data'))
+		
 	}
 }
 

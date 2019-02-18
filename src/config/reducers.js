@@ -2,7 +2,8 @@ import Dashboard from "../ui/Dashboard";
 
 let defaultState = {
 	// user details
-	mm_account: '0xf6e142f84EeBE8b533F97353dE1d3Cd39Cc272f3',
+	mm_account: '',
+	mm_account_balance: null,
 	smartfund_contract: '',
 	portfolios: [
 		{
@@ -135,6 +136,8 @@ let defaultState = {
 	aggregate: 7,
 	spot_pairs: ['USD','EUR','CAD','GBP','JPY'],
 	local_currency: 'USD',
+
+	web3: null,
 	
 }
 
@@ -174,6 +177,16 @@ const priceReducer = (state = defaultState, action) => {
 		return{
 			...state,
 			historical_price_data: action.historical_price_data
+		}
+	} else if(action.type === 'ACCOUNT_CHANGE') {
+		return{
+			...state,
+			mm_account: action.account
+		}
+	} else if(action.type === 'UPDATE_WEB3') {
+		return{
+			...state,
+			web3: action.web3
 		}
 	} else {
 		return{
