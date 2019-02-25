@@ -10,41 +10,41 @@ let defaultState = {
 			id: 0,
 			portfolio_name: 'First Portfolio',
 			inception_date: 1546300800,
-			close_date: 1549775747,
+			close_date: 1460250000,
 			funding_account: '0xf6e142f84EeBE8b533F97353dE1d3Cd39Cc272f3ll',
 			inception_fee: 0.1,
 			close_fee: 0.15,
-			status: 'closed',
+			status: 'Closed',
 			inception_allocations: [
 				{
 					name: 'Bitcoin',
 					ticker: 'BTC',
-					price: 8911.35,
-					amount: 0.62,
+					price: 983.35,
+					amount: 3.53,
 				},
 				{
 					name: 'Ether',
 					ticker: 'ETH',
-					price: 559.91,
-					amount: 0.46,
+					price: 74.91,
+					amount: 4.56,
 				},
 				{
 					name: 'Bitcoin Cash',
 					ticker: 'BCH',
-					price: 1031.78,
-					amount: 6.62,
+					price: 33.78,
+					amount: 35.62,
 				},
 				{
 					name: 'Ether Classic',
 					ticker: 'ETC',
-					price: 19.56,
-					amount: 0.16,
+					price: 2.56,
+					amount: 4.16,
 				},
 				{
 					name: 'Litecoin',
 					ticker: 'LTC',
-					price: 168.71,
-					amount: 0.16,
+					price: 2.75,
+					amount: 39.16,
 				},
 			],
 			close_allocations: [
@@ -70,7 +70,7 @@ let defaultState = {
 			funding_account: '0xf6e142f84EeBE8b533F97353dE1d3Cd39Cc272f3ll',
 			inception_fee: 0.1,
 			close_fee: 0.15,
-			status: 'open',
+			status: 'Open',
 			inception_allocations: [
 				{
 					name: 'Bitcoin',
@@ -132,7 +132,7 @@ let defaultState = {
 	historical_price_data: null,
 	coin_data: null,
 	spot_price: null,
-	data_start_date: 1546300800,
+	data_start_date: 1460250000,
 	aggregate: 7,
 	spot_pairs: ['USD','EUR','CAD','GBP','JPY'],
 	local_currency: 'USD',
@@ -187,6 +187,11 @@ const priceReducer = (state = defaultState, action) => {
 		return{
 			...state,
 			web3: action.web3
+		}
+	} else if(action.type === 'UPDATE_BALANCE') {
+		return{
+			...state,
+			mm_account_balance: action.balance
 		}
 	} else {
 		return{

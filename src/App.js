@@ -39,20 +39,21 @@ class App extends Component {
         let accountInterval = setInterval( async () => {
           // if (this.props.web3.eth.accounts[0] !== this.props.mm_account) {
           // if (this.state.web3.eth.accounts[0] !== this.props.mm_account) {
-            console.log("this.state.web3.eth.accounts[0]", this.state.web3.eth.accounts[0])
-            console.log("this.props.mm_account", this.props.mm_account)
+            // console.log("this.state.web3.eth.accounts[0]", this.state.web3.eth.accounts[0])
+            // console.log("this.props.mm_account", this.props.mm_account)
           if (this.state.web3.eth.accounts[0] !== this.props.mm_account) {
             const [ newAccount, _ ] = await web3.eth.getAccounts()
             this.props.setAccount(newAccount)
             this.setState({ account: newAccount })
             this.state.web3.eth.getBalance(this.props.mm_account, (err, balance) => {
               this.balance = this.props.web3.utils.fromWei(balance, "ether") + " ETH"
-              console.log("this.balance", this.balance)
+              // console.log("this.balance", this.balance)
+              this.props.setBalance(this.balance)
             });
 
 
           }
-        }, 1000);
+        }, 10000);
         this.pullHistoricalData()
 
       }
@@ -131,7 +132,12 @@ class App extends Component {
   render() {
     // console.log("this.props.loaded_data", this.props.loaded_data)
     if ( this.props.loaded_data.coin_data === false  || this.props.loaded_data.spot_price === false || this.props.loaded_data.historical_price_data === false ) {
-      return <div align='center'><h3>Loading SmartFund data. Please wait... ( ͡° ͜ʖ ͡°)</h3></div>
+      return (
+        <div align='center'>
+          <h3>Loading SmartFund data. Please wait... </h3>
+          <h1>( ͡° ͜ʖ ͡°)</h1>
+        </div>
+      )
     }
 
     return (

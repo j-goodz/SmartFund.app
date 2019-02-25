@@ -91,15 +91,13 @@ export function selectUI(ui){
 // 	// }
 // }
 
-
+// =====================================================================
 export function setAccount(account){
 	// console.log("setAccount!" , account)
 	return(dispatch) => {
 		return dispatch(updateAccount(account))
 	}
 }
-
-
 export function updateAccount(account){
 	// console.log("new_account!" , account)
 
@@ -109,22 +107,41 @@ export function updateAccount(account){
 	}
 }
 
-
+// =====================================================================
 export function setWeb3(web3){
 	// console.log("setAccount!" , account)
 	return(dispatch) => {
 		return dispatch(updateWeb3(web3))
 	}
 }
-
-
 export function updateWeb3(web3){
 	return{
 		type:"UPDATE_WEB3",
 		web3: web3
 	}
 }
+// =====================================================================
+export function setBalance(balance){
+	// console.log("setAccount!" , account)
+	return(dispatch) => {
+		return dispatch(updateBalance(balance))
+	}
+}
+export function updateBalance(balance){
+	return{
+		type:"UPDATE_BALANCE",
+		balance: balance
+	}
+}
 
+const headers = {
+	// headers: {'Access-Control-Allow-Origin': 'www.smartfund.app'}
+	headers: {'Access-Control-Allow-Origin': 'http://www.smartfund.app.s3-website.ca-central-1.amazonaws.com'}
+}
+
+const proxyUrl = ''
+// const proxyUrl = 'https://cors.io/?'
+// =====================================================================
 
 // export function updateAccount(account){
 // 	return{
@@ -135,8 +152,9 @@ export function updateWeb3(web3){
 // =====================================================================
 export function fetchNewPriceHist(ticker, days, agg){
 	return async (dispatch) => {
-		// return await axios.get(`https://cors.io/?https://min-api.cryptocompare.com/data/histoday?fsym=${ticker}&tsym=USD&limit=${days}&aggregate=${agg}&e=CCCAGG&api_key=a5e3152003c8110c8bee2bba417ab3f3b7d8b82fbade524a0b13adcc3e1b1792`).then((res) => {
-		return await axios.get(`https://min-api.cryptocompare.com/data/histoday?fsym=${ticker}&tsym=USD&limit=${days}&aggregate=${agg}&e=CCCAGG&api_key=a5e3152003c8110c8bee2bba417ab3f3b7d8b82fbade524a0b13adcc3e1b1792`).then((res) => {
+		return await axios.get(`${proxyUrl}https://min-api.cryptocompare.com/data/histoday?fsym=${ticker}&tsym=${store.getState().local_currency}&limit=${days}&aggregate=${agg}&e=CCCAGG&api_key=a5e3152003c8110c8bee2bba417ab3f3b7d8b82fbade524a0b13adcc3e1b1792`
+		// ,headers
+		).then((res) => {
 			if (store.getState().historical_price_data === null) {
 				let payload = res.data.Data.map( (item) => {
 					const date = moment.unix(item.time).format('YYYY-MM-DD')
@@ -170,8 +188,8 @@ export function updatePriceHist(history){
 // =====================================================================
 export function fetchCoinData(){
 	return async (dispatch) => {
-		// return await axios.get(`https://cors.io/?https://min-api.cryptocompare.com/data/all/coinlist`
-		return await axios.get(`https://min-api.cryptocompare.com/data/all/coinlist`
+		return await axios.get(`${proxyUrl}https://min-api.cryptocompare.com/data/all/coinlist`
+		// ,headers
 		).then( (res) => {
 			const payload = []	
 			for (let item of Object.values(res.data.Data)) {
@@ -211,9 +229,9 @@ export function fetchCoinSpot(){
 	return async (dispatch) => {
 		const ticker_string = ticker_list.toString()
 		return await axios.get(
-			// `https://cors.io/?https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${ticker_string}&tsyms=${store.getState().spot_pairs.toString()}`,
-			`https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${ticker_string}&tsyms=${store.getState().spot_pairs.toString()}`
-		).then( (res) => {
+			`${proxyUrl}https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${ticker_string}&tsyms=${store.getState().spot_pairs.toString()}`
+			// ,headers
+			).then( (res) => {
 			dispatch(updateCoinSpot( res.data ))
 		}).then(dispatch(setDataLoaded('spot_price')))
 	}

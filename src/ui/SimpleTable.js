@@ -24,9 +24,28 @@ const styles = {
 };
 
 let id = 0;
-function createData(name, ticker, initial_amount, initial_price, book_value, market_value, change) {
+function createData(
+  name, 
+  iconUrl, 
+  // ticker, 
+  initial_amount, 
+  initial_price, 
+  book_value, 
+  market_value, 
+  change
+) {
   id += 1;
-  return { id, name, ticker, initial_amount, initial_price, book_value, market_value, change };
+  return { 
+    id, 
+    name, 
+    iconUrl,
+    // ticker, 
+    initial_amount, 
+    initial_price, 
+    book_value, 
+    market_value, 
+    change 
+};
 }
 
 export class SimpleTable extends Component {
@@ -73,6 +92,8 @@ export class SimpleTable extends Component {
     // console.log("this.props.spot_price.RAW.BTC.USD.PRICE: ", this.props.spot_price.RAW['BTC'][this.props.local_currency].PRICE)
 
       data = this.props.portfolios[portfolio_id].inception_allocations.map((item) => {
+        const symbol = this.props.spot_price.DISPLAY[item.ticker][this.props.local_currency].FROMSYMBOL
+        const iconUrl = this.props.spot_price.DISPLAY[item.ticker][this.props.local_currency].IMAGEURL
         const book_value = (item.price * item.amount).toFixed(2)
         const market_value = (item.amount * this.props.spot_price.RAW[item.ticker][this.props.local_currency].PRICE).toFixed(2)
         const percent_change = this.percIncrease( book_value, market_value) + "%"
@@ -81,7 +102,7 @@ export class SimpleTable extends Component {
         if ( this.props.coin_data !== null ) { 
           coin_name = Object.values(this.props.coin_data).map((coin_item) => {
             if(coin_item.Symbol === item.ticker){
-              return coin_item.CoinName
+              return coin_item.FullName
             }
           })
         }
@@ -89,8 +110,9 @@ export class SimpleTable extends Component {
         return (
           createData( 
             coin_name,
-            item.ticker, 
-            item.amount,
+            iconUrl,
+            // item.ticker, 
+            symbol + ' ' + item.amount,
             '$' + item.price,
             '$' + book_value,
             '$' + market_value, 
@@ -104,10 +126,10 @@ export class SimpleTable extends Component {
         <Table className={classes.table}>
           <TableHead>
             <TableRow>
-              <TableCell>Crypto Asset</TableCell>
-              <TableCell align="center">Ticker</TableCell>
+              <TableCell>Crypto Asset (Ticker)</TableCell>
+              {/* <TableCell align="center">Ticker</TableCell> */}
               <TableCell align="center">Initial Amount</TableCell>
-              <TableCell align="center">Initial Price Per Unit({this.props.local_currency})</TableCell>
+              <TableCell align="center">Initial Price Per Unit ({this.props.local_currency})</TableCell>
               <TableCell align="right">Book Value ({this.props.local_currency})</TableCell>
               <TableCell align="right">Market Value ({this.props.local_currency})</TableCell>
               <TableCell align="right">% Change</TableCell>
@@ -117,11 +139,13 @@ export class SimpleTable extends Component {
             {data.map(n => (
               <TableRow key={n.id}> 
                 <TableCell component="th" scope="row">
+                <img src={ `https://www.cryptocompare.com${n.iconUrl}` } width={16} height={16} ></img>
+                  &nbsp;
                   {n.name}
                 </TableCell>
-                <TableCell align="center">{n.ticker}</TableCell>
+                {/* <TableCell align="center">{n.ticker}</TableCell> */}
                 <TableCell align="center">{n.initial_amount} {n.ticker}</TableCell>
-                <TableCell align="center">{n.initial_price} per {n.ticker}</TableCell>
+                <TableCell align="center">{n.initial_price}</TableCell>
                 <TableCell align="right">{n.book_value}</TableCell>
                 <TableCell align="right">{n.market_value}</TableCell>
                 <TableCell align="right">{n.change}</TableCell>

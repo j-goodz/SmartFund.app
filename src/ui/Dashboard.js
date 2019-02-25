@@ -121,34 +121,11 @@ class Dashboard extends React.Component {
   };
 
   render() {
-
-    
-            // console.log(this.props.portfolios[this.props.selected_portfolio].inception_allocations)
-// 
     const { classes } = this.props;
-    // let selected_fund = null
-    // let fund_index = null
-    // let fund_name = null
 
-
-    // if ( this.props.selected_portfolio !== 0 ) {
-    //   fund_index = this.props.selected_portfolio 
-      
-    //   fund_name = this.props.portfolios[this.props.selected_portfolio].portfolio_name
-    //   selected_fund = this.props.selected_portfolio[fund_index]
-
-
-    // }
-    // console.log("portfolio_name: ", fund_name)
-    // console.log("fund_index: ", fund_index)
-    // console.log("selected_fund: ", selected_fund)
-
-    
-
-
-  
-
-    // console.log("this.props.selected_portfolio: ", this.props.selected_portfolio)
+    // const portfolio_list = this.props
+    // console.log("this.props.selected_portfolio", portfolio_list)
+    // console.log("this.props.portfolios", this.props.portfolios)
     return (
       
       <div className={classes.root}>
@@ -171,10 +148,8 @@ class Dashboard extends React.Component {
                 &nbsp;
                 <Typography component="h1" variant="h4" color="inherit" noWrap className={classes.title}>SmartFund</Typography>
             </IconButton>
-            <Typography component="h1" variant="h6" color="inherit" align="right" noWrap className={classes.title}  >
-              <AccountBalanceWalletIcon />
-              &nbsp;Account: { this.props.mm_account }
-            </Typography>
+
+
           </Toolbar>
         </AppBar>
         <Drawer
@@ -196,16 +171,21 @@ class Dashboard extends React.Component {
           <div className={classes.appBarSpacer} />
 
           {/* { this.props.selected_portfolio === 0 ? ( console.log("this.props.selected_portfolio === ", this.props.selected_portfolio) ) : <h1>31231231231231321</h1> } */}
-          { this.props.selected_portfolio === -1  
-            ? 
+          { this.props.selected_portfolio === -1
+            ? (
               <div>
                 {/* <br /> <br /> */}
                 {/* <h1>Add dashboard intro screen here with info</h1> */}
-                <Stringify value={this.props} />
-                {/* <FundList /> */}
+                <FundList />
                 {/* <FundCard /> */}
-              </div> 
-            : 
+                {/* <Stringify value={this.props} /> */}
+              </div>
+            ) 
+            : null
+          }
+          
+          { this.props.selected_portfolio >= 0  
+            ?
               <div>
                 <Typography variant="h4" gutterBottom component="h2">
                   { this.props.portfolios[this.props.selected_portfolio].portfolio_name }
@@ -216,7 +196,7 @@ class Dashboard extends React.Component {
                   {/* const date = moment.unix(item.time).format('YYYY-MM-DD') */}
                 </Typography>
                 <Typography variant="h6" gutterBottom component="h2">
-                  Price (USD)
+                  Price {this.props.local_currency}
                 </Typography>
                 <Typography component="div" className={classes.chartContainer}>
                   <SimpleLineChart />
@@ -228,7 +208,8 @@ class Dashboard extends React.Component {
                   <SimpleTable />
                 </div>
               </div>
-            }
+            : null  
+          }
         </main>
       </div>
     );
@@ -240,8 +221,17 @@ Dashboard.propTypes = {
 };
 
 const mapStateToProps=(state) => {
-  const { mm_account, selected_portfolio, } = state
-  return { mm_account, selected_portfolio,  }
+  const { mm_account, selected_portfolio, mm_account_balance, portfolios, loaded_data, local_currency } = state
+  return { mm_account, selected_portfolio, mm_account_balance, portfolios, loaded_data, local_currency }
 }
 
 export default connect(mapStateToProps, actionCreators)(withStyles(styles)(Dashboard));
+
+
+// {/* 
+//             <Typography component="h1" variant="h6" color="inherit" align="right" noWrap className={classes.title}  >
+//               <AccountBalanceWalletIcon />
+//               {/* &nbsp;Account: { this.props.mm_account_balance } ({ this.props.mm_account.substring(1, 8)  }...) */}
+//               &nbsp;Account Balance: { this.props.mm_account_balance } <small>({ this.props.mm_account.substring(1, 6)  })</small>
+//             </Typography> 
+//             */}
