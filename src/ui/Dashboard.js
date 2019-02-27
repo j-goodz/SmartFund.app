@@ -21,6 +21,7 @@ import SimpleLineChart from './SimpleLineChart';
 import SimpleTable from './SimpleTable';
 import moment from 'moment';
 import ListItems from './ListItems';
+import NewSmartFund from './NewSmartFund';
 import FundCard from './FundCard';
 import FundList from './FundList';
 import Stringify from 'react-stringify'
@@ -176,7 +177,9 @@ class Dashboard extends React.Component {
               <div>
                 {/* <br /> <br /> */}
                 {/* <h1>Add dashboard intro screen here with info</h1> */}
-                <FundList />
+                {/* <FundList /> */}
+                <NewSmartFund />
+
                 {/* <FundCard /> */}
                 {/* <Stringify value={this.props} /> */}
               </div>

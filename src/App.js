@@ -8,6 +8,12 @@ import SimpleLineChart from './ui/SimpleLineChart'
 import Dashboard from './ui/Dashboard'
 import moment from 'moment';
 import Web3 from 'web3';
+import {
+  Card,
+  Text,
+  Icon,
+  MetaMaskButton
+} from 'rimble-ui'
 
 // const Navigation = (props) => <nav>
 //   {/* <ul> */}
@@ -136,6 +142,17 @@ class App extends Component {
         <div align='center'>
           <h3>Loading SmartFund data. Please wait... </h3>
           <h1>( ͡° ͜ʖ ͡°)</h1>
+
+          
+          <Card width={'420px'} mx={'auto'} px={4}>
+                    <Text caps fontSize={0} fontWeight={4} mb={3} display={'flex'} alignItems={'center'} >
+                      <Icon name={'AccountBalanceWallet'} mr={2}></Icon>
+                      Connect your Wallet:
+                    </Text>
+                    <MetaMaskButton.outline fullWidth>Install MetaMask</MetaMaskButton.outline>
+          </Card>
+
+          
         </div>
       )
     }

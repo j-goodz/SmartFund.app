@@ -23,6 +23,7 @@ import CardLineChart from './CardLineChart';
 import PieChart from './PieChart';
 import ReactSwipe from 'react-swipe';
 import Divider from '@material-ui/core/Divider';
+import TradingViewWidget from 'react-tradingview-widget';
 
 
 const styles = {
@@ -151,8 +152,13 @@ export class FundCard extends Component {
                             ref={el => (reactSwipeEl = el)}
                         >
                             <div onClick={() => reactSwipeEl.next()}><PieChart portfolioId={portfolio.id}  /></div>
-                            <div onClick={() => reactSwipeEl.next()}><CardLineChart portfolioId={portfolio.id}  /></div>
-                            {/* <div>PANE 3</div> */}
+                            {/* <div onClick={() => reactSwipeEl.next()}><CardLineChart portfolioId={portfolio.id}  /></div>
+                            <div onClick={() => reactSwipeEl.next()}><TradingViewWidget symbol="BTCUSD"
+                                    // theme={Themes.DARK}
+                                    // locale="fr"
+                                    autosize
+                                />
+                             </div> */}
                         </ReactSwipe>
                         {/* <button onClick={() => reactSwipeEl.next()}>Next</button> */}
                         {/* <button onClick={() => reactSwipeEl.prev()}>Previous</button> */}
