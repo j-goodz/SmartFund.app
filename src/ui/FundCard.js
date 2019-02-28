@@ -101,6 +101,7 @@ export class FundCard extends Component {
         //     percentColour === 'error'
         // }
         let reactSwipeEl;
+        // console.log("classes", classes)
 
         return (
             // <div >

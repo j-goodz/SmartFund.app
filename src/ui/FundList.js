@@ -52,11 +52,12 @@ export class FundList extends Component {
     const { classes } = this.props;
     const { spacing } = this.props;
 
+      
     let fundList
     if ( this.props.spot_price !== null && this.props.loaded_data.spot_price === true ) {
       fundList = this.props.portfolios.map((portfolio) => {
         return (
-          <Grid item xs={12}>
+          <Grid item xs={12} key={ portfolio.id } className={classes.root} >
             {/* <Grid container className={classes.demo} justify="center" spacing={Number(spacing)}> */}
             {/* <FundCard portfolio={portfolio} key={ portfolio.id } className={classes.spacing} />  */}
             <FundCard portfolio={portfolio} key={ portfolio.id } spacing={Number(spacing)} /> 

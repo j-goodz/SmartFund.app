@@ -22,7 +22,11 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-// import SelectField from 'material-ui/SelectField';
+import SelectField from 'material-ui/SelectField';
+import PieChart from './PieChart';
+import AllocationSetup from './AllocationSetup';
+
+// import Select from 'material-ui/Select';
 // import { MenuItem,  DropDownMenu } from 'material-ui/MenuItem';
 import {
   FormControl,
@@ -61,7 +65,7 @@ const styles = theme => ({
 
 
 function getSteps() {
-  return ['Account Funding', 'Asset Selection', 'Choose Allocations','Name You SmartFund', 'Review', 'Transaction Confirmation','Done!'];
+  return ['Account Funding', 'Asset Selection', 'Choose Allocations','Name your SmartFund:', 'Review', 'Transaction Confirmation','Done!'];
 }
 
 function getStepContent(step) {
@@ -70,22 +74,20 @@ function getStepContent(step) {
       return (
         `Enter the amount of Ether you would like to start your SmartFund with:`
         );
-    case 1:
-      return 'An ad group contains one or more ads which target a shared set of keywords.';
     case 2:
-      return `Try out different ad text to see what brings in the most customers,
-              and learn how to enhance your ads using features like ad extensions.
-              If you run into any problems with your ads, find out how to tell if
-              they're running and how to resolve approval issues.`;
+      return `Set the allocations of your SmartFund portfolio:`;
+    case 3:
+      return ``;
+    case 4:
+      return `Review and create your SmartFund before inception:`;
+    case 5:
+      return `Waiting for SmartFund tranaction to be mined...`;
+    case 7:
+      return `Success! Your SmartFund has been created! You can view it in the My SmartFunds screen.`;
     default:
       return 'Unknown step';
   }
 }
-
-// const accountFunding = (
-
-
-// )
 
 class NewSmartFund extends React.Component {
     constructor(props) {
@@ -93,13 +95,14 @@ class NewSmartFund extends React.Component {
         this.state = {
             activeStep: 0,
             values: [],
-            
+            assetListLoaded: false,
+            assetListData: [],
+            selectedAssets: [],
             // Step 1 - SmartFund name and funding. Details Funding Step - block if mm account balance too low or mm is locked.
             smartfund_name: '',
             mm_account: '',
             mm_account_balance: null,
             funding_amount: 0,
-
 
             // Step 2 Asset Selection & Step 3 Choose Allocations
             asset_holdings: [
@@ -117,26 +120,21 @@ class NewSmartFund extends React.Component {
             ],
 
             // Step 4 - Name Smartfund
-
             // Step 7 - Done
             // smartfund_contract: '', // accept reponse for new contract, get back new contract address?
-            names: [
-              'Oliver Hansen',
-              'Van Henry',
-              'April Tucker',
-              'Ralph Hubbard',
-              'Omar Alexander',
-              'Carlos Abbott',
-              'Miriam Wagner',
-              'Bradley Wilkerson',
-              'Virginia Andrews',
-              'Kelly Snyder',
-            ]
+
         }
 
     }
-    handleChange = (event, index, values) => this.setState({values});
+    handleChange = (event, index, selectedAssets) => {
+      
+      this.setState({selectedAssets});
+    console.log("event",event)
+    console.log("index",index)
+    console.log("selectedAssets",selectedAssets)
     
+    }
+
   handleNext = () => {
     this.setState(state => ({
       activeStep: state.activeStep + 1,
@@ -155,32 +153,23 @@ class NewSmartFund extends React.Component {
     });
   };
 
-
-  menuItems(values) {
-    return this.state.names.map((name) => (
+  menuItems() {
+    return this.props.coin_data.map((coin) => (
       <MenuItem
-        key={name}
+        key={coin.FullName}
         insetChildren={true}
-        checked={values && values.indexOf(name) > -1}
-        value={name}
-        primaryText={name}
+        checked={this.state.selectedAssets && this.state.selectedAssets.indexOf(coin) > -1}
+        value={coin.FullName}
+        primaryText={coin.FullName}
       />
     ));
+    
   }
-
 
   render() {
     const { classes } = this.props;
     const steps = getSteps();
     const { activeStep } = this.state;
-    let market_value
-    console.log("this.props.spot_price.RAW['BTC']", this.props)
-    // if ( this.props.loaded_data.coin_data === true  && this.props.loaded_data.spot_price === true && this.props.loaded_data.historical_price_data === true ) {
-
-
-    //    market_value = (this.state.funding_amount * this.props.spot_price.RAW['BTC'][this.props.local_currency].PRICE).toFixed(2)
-    // }
-
 
     return (
       <div className={classes.root}>
@@ -195,18 +184,91 @@ class NewSmartFund extends React.Component {
                 <div className={classes.actionsContainer}>
                   <div>
 
-                  {/* <SelectField /> */}
-                  {/* <SelectField
-        multiple={true}
-        hintText="Select a name"
-        value={this.state.values}
-        onChange={this.handleChange}
-      >
-        {this.menuItems(this.state.values)}
-      </SelectField> */}
 
+                  { this.state.activeStep === 0
+                    ? (
+                      <div>
+                        <Typography><b>Current Balance: {this.props.mm_account_balance}</b></Typography>
+                        <TextField
+                            id="filled-adornment-amount"
+                            className={classNames(classes.margin, classes.textField)}
+                            variant="filled"
+                            label="Amount"
+                            value={'0'}
+                            helperText={ this.state.market_value + this.props.local_currency }
+                            // onChange={this.handleChange('amount')}
+                            InputProps={{
+                              startAdornment: <InputAdornment position="start" >Ether</InputAdornment>,
+                            }}
+                            />
+                      </div>
+                    ) 
+                    : null 
+                  }
+
+                  { activeStep === 1
+                    ? ( <div>
+                      <SelectField
+                        multiple={true}
+                        hintText="Select your crypto assets"
+                        value={this.state.selectedAssets}
+                        onChange={this.handleChange}
+                      >
+                        {this.menuItems()}
+                      </SelectField>
+
+                      {/* <Select
+                        multiple
+                        native
+                        value={this.state.selectedAssets}
+                        // onChange={this.handleChangeMultiple}
+                        inputProps={{
+                          id: 'select-multiple-native',
+                        }}
+                        >
+                        {this.state.selectedAssets.map(name => (
+                          <option key={name} value={name}>
+                            {name}
+                          </option>
+                        ))}
+                      </Select> */}
+                      </div>
+                    
+                    )
+                    : null 
+                  }
+                  { this.state.activeStep === 2
+                    ? <div>
+                        <AllocationSetup selectedAssets={this.state.selectedAssets} />
+                        {/* <PieChart selectedAssets={this.state.selectedAssets} /> */}
+                      </div>
+                    : null 
+                  }
+                  {/* { this.state.activeStep === 3
+                    ?
+                    : null 
+                  } */}
+                  {/* { this.state.activeStep === 4
+                    ?
+                    : null 
+                  } */}
+                  {/* { this.state.activeStep === 5
+                    ?
+                    : null 
+                  } */}
+                  {/* { this.state.activeStep === 6
+                    ?
+                    : null 
+                  } */}
+                  {/* if (this.state.activeStep === 0) {
+  
+
+                  {/* <SelectField /> */}
+
+
+{/* <div>
                   <Typography><b>Current Balance: {this.props.mm_account_balance}</b></Typography>
-                  <TextField
+                   <TextField
                       id="filled-adornment-amount"
                       className={classNames(classes.margin, classes.textField)}
                       variant="filled"
@@ -218,9 +280,11 @@ class NewSmartFund extends React.Component {
                         startAdornment: <InputAdornment position="start" >Ether</InputAdornment>,
                       }}
                       />
+</div> */}
                     <br />
+                    
                     <Button
-                      disabled={activeStep === 0}
+                      disabled={activeStep === 0 || activeStep === 6}
                       onClick={this.handleBack}
                       className={classes.button}
                       >
@@ -244,10 +308,10 @@ class NewSmartFund extends React.Component {
         </Stepper>
         {activeStep === steps.length && (
           <Paper square elevation={0} className={classes.resetContainer}>
-            <Typography>All steps completed - you&apos;re finished</Typography>
-            <Button onClick={this.handleReset} className={classes.button}>
+            <Typography>Your SmartFund has been created!</Typography>
+            {/* <Button onClick={this.handleReset} className={classes.button}>
               Reset
-            </Button>
+            </Button> */}
           </Paper>
         )}
       </div>
@@ -261,8 +325,8 @@ NewSmartFund.propTypes = {
 
 const mapStateToProps=(state) => {
     const { mm_account, selected_portfolio, mm_account_balance, portfolios, loaded_data, local_currency , spot_price } = state
-    return { mm_account, selected_portfolio, mm_account_balance, portfolios, loaded_data, local_currency, spot_price }
-    // return state
+    // return { mm_account, selected_portfolio, mm_account_balance, portfolios, loaded_data, local_currency, spot_price }
+    return state
   }
   
   export default connect(mapStateToProps, actionCreators)(withStyles(styles)(NewSmartFund));

@@ -8,6 +8,9 @@ import SimpleLineChart from './ui/SimpleLineChart'
 import Dashboard from './ui/Dashboard'
 import moment from 'moment';
 import Web3 from 'web3';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+
 import {
   Card,
   Text,
@@ -136,7 +139,9 @@ class App extends Component {
   }
 
   render() {
+    
     // console.log("this.props.loaded_data", this.props.loaded_data)
+
     if ( this.props.loaded_data.coin_data === false  || this.props.loaded_data.spot_price === false || this.props.loaded_data.historical_price_data === false ) {
       return (
         <div align='center'>
@@ -144,13 +149,13 @@ class App extends Component {
           <h1>( ͡° ͜ʖ ͡°)</h1>
 
           
-          <Card width={'420px'} mx={'auto'} px={4}>
+          {/* <Card width={'420px'} mx={'auto'} px={4}>
                     <Text caps fontSize={0} fontWeight={4} mb={3} display={'flex'} alignItems={'center'} >
                       <Icon name={'AccountBalanceWallet'} mr={2}></Icon>
                       Connect your Wallet:
                     </Text>
                     <MetaMaskButton.outline fullWidth>Install MetaMask</MetaMaskButton.outline>
-          </Card>
+          </Card> */}
 
           
         </div>
