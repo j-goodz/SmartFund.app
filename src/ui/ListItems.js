@@ -13,7 +13,7 @@ import InfoIcon from '@material-ui/icons/Info';
 import ShowChartIcon from '@material-ui/icons/ShowChart';
 import Settings from '@material-ui/icons/Settings';
 import { NavLink } from 'react-router-dom'
-import { BrowserRouter, Route, Switch, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 // import store from '../config/store'
 import * as actionCreators from '../config/actions';
 import { connect } from 'react-redux';
@@ -42,85 +42,94 @@ export class ListItems extends Component {
     
     
     render() {
-      const mainListItems = ( 
-        <div>
-          <Divider />
-        <List>
-          {/* <Link to={process.env.PUBLIC_URL + '/dashboard'} style={{ textDecoration: 'none' }} > */}
-          {/* <Link to={process.env.PUBLIC_URL + '/new'} style={{ textDecoration: 'none' }} > */}
-            <ListItem button onClick={() => { this.props.setSelectedFund(-1)}} >
-              <ListItemIcon>
-                <DashboardIcon />
-              </ListItemIcon>
-              {/* <NavLink to='/'><ListItemText primary="Dashboard" /></NavLink> */}
-                <ListItemText primary="My SmartFunds" />
-              </ListItem>
-            <ListItem button onClick={() => { this.props.selectUiInterface('new')}}>
-            <ListItemIcon>
-              <AddBoxtIcon />
-            </ListItemIcon>
-              <ListItemText primary="New SmartFund" />
-            </ListItem>
-            <ListItem button onClick={() => { this.props.setSelectedFund(-1)}} >
-              <ListItemIcon>
-                <InsertChartIcon />
-              </ListItemIcon>
-                <ListItemText primary="Performance" />
-            </ListItem>
-            <ListItem button onClick={() => { this.props.setSelectedFund(-1)}} >
-              <ListItemIcon>
-                <AccountBalanceWalletIcon />
-              </ListItemIcon>
-                <ListItemText primary="Account" />
-            </ListItem>
-            <ListItem button onClick={() => { this.props.setSelectedFund(-1)}} >
-              <ListItemIcon>
-                <Settings />
-              </ListItemIcon>
-                <ListItemText primary="Settings" />
-            </ListItem>
-            </List>
-          <Divider />
-        </div>
-      )
+		const mainListItems = ( 
+			<div>
+			<Divider />
+				<List>
+					{/* <Link to={process.env.PUBLIC_URL + '/dashboard'} style={{ textDecoration: 'none' }} > */}
+					<Link to={process.env.PUBLIC_URL + '/'} style={{ textDecoration: 'none' }} >
+						<ListItem button onClick={() => { this.props.selectUiInterface('smartfunds')}} >
+							<ListItemIcon>
+							<DashboardIcon />
+						</ListItemIcon>
+						{/* <NavLink to='/'><ListItemText primary="Dashboard" /></NavLink> */}
+						<ListItemText primary="My SmartFunds" />
+						</ListItem>
+					</Link>
+					<Link to={process.env.PUBLIC_URL + '/new'} style={{ textDecoration: 'none' }} >
+						<ListItem button onClick={() => { this.props.selectUiInterface('new')}}>
+							<ListItemIcon>
+							<AddBoxtIcon />
+							</ListItemIcon>
+							<ListItemText primary="New SmartFund" />
+						</ListItem>
+					</Link>
+					<Link to={process.env.PUBLIC_URL + '/performance'} style={{ textDecoration: 'none' }} >
+						<ListItem button onClick={() => { this.props.setSelectedFund(-1)}} >
+						<ListItemIcon>
+							<InsertChartIcon />
+						</ListItemIcon>
+							<ListItemText primary="Performance" />
+						</ListItem>
+					</Link>
+					<Link to={process.env.PUBLIC_URL + '/account'} style={{ textDecoration: 'none' }} >
+						<ListItem button onClick={() => { this.props.setSelectedFund(-1)}} >
+						<ListItemIcon>
+							<AccountBalanceWalletIcon />
+						</ListItemIcon>
+							<ListItemText primary="Account" />
+						</ListItem>
+					</Link>
+					<Link to={process.env.PUBLIC_URL + '/settings'} style={{ textDecoration: 'none' }} >				
+						<ListItem button onClick={() => { this.props.setSelectedFund(-1)}} >
+						<ListItemIcon>
+							<Settings />
+						</ListItemIcon>
+							<ListItemText primary="Settings" />
+						</ListItem>
+					</Link>
+				</List>
+				<Divider />
+			</div>
+		)
 
-      let openListItems = this.props.portfolios.map((item) => {
-        if (item.status === 'Open') {
-          return (
-            <ListItem button onClick={() => { this.props.setSelectedFund(item.id)}} key={item.id} >
-              <ListItemIcon>
-                <ShowChartIcon />
-              </ListItemIcon>
-              <ListItemText primary={ item.portfolio_name } />
-            </ListItem>
-        )
-      }
-    })
+		let openListItems = this.props.portfolios.map((item) => {
+			if (item.status === 'Open') {
+			return (
+				<ListItem button onClick={() => { this.props.setSelectedFund(item.id)}} key={item.id} >
+				<ListItemIcon>
+					<ShowChartIcon />
+				</ListItemIcon>
+				<ListItemText primary={ item.portfolio_name } />
+				</ListItem>
+			)
+		}
+		})
 
-    let closedListItems = this.props.portfolios.map((item) => {     
-      if (item.status === 'Closed') {
-        return (
-            <ListItem button onClick={() => { this.props.setSelectedFund(item.id)}} key={item.id} >
-              <ListItemIcon>
-                <ShowChartIcon />
-              </ListItemIcon>
-              <ListItemText primary={ item.portfolio_name } />
-            </ListItem>
-        )
-      }
-    })
-    
-    return ( 
-      <div>
-        {mainListItems}
-        {/* <ListSubheader inset>Open Portfolios</ListSubheader>
-        <List>{openListItems}</List>
-        <Divider />
-        <ListSubheader inset>Liquidated Portfolios</ListSubheader>
-        <List>{closedListItems}</List> */}
-      </div>   
-    )
-  }
+		let closedListItems = this.props.portfolios.map((item) => {     
+		if (item.status === 'Closed') {
+			return (
+				<ListItem button onClick={() => { this.props.setSelectedFund(item.id)}} key={item.id} >
+				<ListItemIcon>
+					<ShowChartIcon />
+				</ListItemIcon>
+				<ListItemText primary={ item.portfolio_name } />
+				</ListItem>
+			)
+		}
+		})
+		
+		return ( 
+		<div>
+			{mainListItems}
+			{/* <ListSubheader inset>Open Portfolios</ListSubheader>
+			<List>{openListItems}</List>
+			<Divider />
+			<ListSubheader inset>Liquidated Portfolios</ListSubheader>
+			<List>{closedListItems}</List> */}
+		</div>   
+		)
+	}
 }
       
 const mapStateToProps=(state) => {

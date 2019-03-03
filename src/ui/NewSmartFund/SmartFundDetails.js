@@ -7,9 +7,10 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import * as actionCreators from '../config/actions';
+import * as actionCreators from '../../config/actions';
 import { connect } from 'react-redux';
 import moment from 'moment';
+
 
 const styles = {
   root: {
@@ -46,7 +47,7 @@ function createData(
 };
 }
 
-export class SimpleTable extends Component {
+export class SmartFundDetails extends Component {
   constructor(props) {
     super(props);
     // this.state = {
@@ -58,19 +59,19 @@ export class SimpleTable extends Component {
     componentDidMount() {
     }
 
-    percIncrease(a, b) {
-		let percent;
-		if(b !== 0) {
-			if(a !== 0) {
-				percent = (b - a) / a * 100;
-			} else {
-				percent = b * 100;
-			}
-		} else {
-			percent = - a * 100;            
-		}       
-		return Math.floor(percent);
-    }
+    // percIncrease(a, b) {
+    //   let percent;
+    //   if(b !== 0) {
+    //       if(a !== 0) {
+    //           percent = (b - a) / a * 100;
+    //       } else {
+    //           percent = b * 100;
+    //       }
+    //   } else {
+    //       percent = - a * 100;            
+    //   }       
+    //   return Math.floor(percent);
+    // }
       
   render() {    
 		const { classes } = this.props
@@ -79,7 +80,7 @@ export class SimpleTable extends Component {
 		let latest_prices = null
 		let data = []
 
-			data = this.props.portfolios[portfolio_id].inception_allocations.map((item) => {
+		data = this.props.portfolios[portfolio_id].inception_allocations.map((item) => {
 			const symbol = this.props.spot_price.DISPLAY[item.ticker][this.props.local_currency].FROMSYMBOL
 			const iconUrl = this.props.spot_price.DISPLAY[item.ticker][this.props.local_currency].IMAGEURL
 			const book_value = (item.price * item.amount).toFixed(2)
@@ -147,7 +148,7 @@ export class SimpleTable extends Component {
 	}
 }
 
-SimpleTable.propTypes = {
+SmartFundDetails.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
@@ -157,4 +158,4 @@ const mapStateToProps=(state) => {
   return { portfolios, historical_price_data, selected_portfolio, spot_price, local_currency, coin_data }
 }
 
-export default connect(mapStateToProps, actionCreators)(withStyles(styles)(SimpleTable));
+export default connect(mapStateToProps, actionCreators)(withStyles(styles)(SmartFundDetails));

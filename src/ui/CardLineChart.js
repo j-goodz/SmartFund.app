@@ -9,7 +9,7 @@ import Tooltip from 'recharts/lib/component/Tooltip';
 import Legend from 'recharts/lib/component/Legend';
 import { connect } from 'react-redux';
 import * as actionCreators from '../config/actions';
-import Stringify from 'react-stringify'
+// import Stringify from 'react-stringify'
 
 // 99% per https://github.com/recharts/recharts/issues/172
 
@@ -41,17 +41,17 @@ const color_codes = ['#e6194b', '#3cb44b', '#4363d8', '#f58231', '#911eb4', '#46
 
 
 export class CardLineChart extends Component {
-  constructor(props) {
-    super(props);
-    // this.state = {
-      //   portfolios: null,
-      //   // portfolio_id: this.props.portfolios
-      // }
-    }  
+  // constructor(props) {
+  //   super(props);
+  //   // this.state = {
+  //     //   portfolios: null,
+  //     //   // portfolio_id: this.props.portfolios
+  //     // }
+  //   }  
     
 
   render(){
-    console.log("this.props", this.props)
+    // console.log("this.props", this.props)
     const asset_data = this.props.portfolios[this.props.portfolioId].inception_allocations.map((item, index) => {  
       // return ( <Line type="monotone" dataKey={ item.ticker } stroke="#82ca9d" key={ item.id + item.ticker }/> )
       return ( <Line type="monotone" dataKey={ item.ticker } stroke={ color_codes[index] } key={ item.id + item.ticker }/> )

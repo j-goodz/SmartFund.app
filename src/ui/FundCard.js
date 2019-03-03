@@ -18,12 +18,13 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import ShareIcon from '@material-ui/icons/Share';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
-import classnames from 'classnames';
+// import classnames from 'classnames';
 import CardLineChart from './CardLineChart';
-import PieChart from './PieChart';
+import NewPieChart from './NewSmartFund/NewPieChart';
 import ReactSwipe from 'react-swipe';
 import Divider from '@material-ui/core/Divider';
 import TradingViewWidget from 'react-tradingview-widget';
+import { Link, Redirect } from "react-router-dom";
 
 
 const styles = {
@@ -44,8 +45,6 @@ export class FundCard extends Component {
     constructor(props) {
         super(props)
     //  this.state = {
-      //   portfolios: null,
-      //   // portfolio_id: this.props.portfolios
       // }
     }  
     componentDidMount() {
@@ -64,6 +63,20 @@ export class FundCard extends Component {
         return Math.floor(percent);
       }
                
+
+      handleClick = (portfolioId) => {
+        // this.setState({activeStep: 0});
+        this.props.setSelectedFund(portfolioId)
+
+        // if (this.props.selected_portfolio === -1) {
+			// return 
+            // <Redirect from={process.env.PUBLIC_URL + '/'} to={process.env.PUBLIC_URL + '/' + portfolioId} />
+        // }
+
+
+      };
+
+
     render() {
 
         const { classes } = this.props;
@@ -71,6 +84,8 @@ export class FundCard extends Component {
         let verboseAssetList = []
         let inceptionValue = 0 
         let marketValue = 0 
+        // console.log("this.props", this.props)
+        // console.log("this.props.match.params.id", this.props.match.params.id)
 
         for ( let asset of portfolio.inception_allocations ) {
             inceptionValue = (inceptionValue + ( asset.price * asset.amount ))
@@ -85,23 +100,7 @@ export class FundCard extends Component {
             subheader = 'Liquidated: ' + moment.unix(portfolio.close_date).format('lll')
         }
  
- 
-        // const percentColour
-        //  = (() => {
-        //     if (percentChange > 0) {
-        //         return 'primary'
-        //     } else {
-        //         return 'error'
-        //     }
-        // })
-
-        // if (percentChange >== 0) {
-        //     percentColour === 'primary'
-        // } else {
-        //     percentColour === 'error'
-        // }
         let reactSwipeEl;
-        // console.log("classes", classes)
 
         return (
             // <div >
@@ -112,15 +111,13 @@ export class FundCard extends Component {
                     image="/static/images/cards/contemplative-reptile.jpg"
                     title={ portfolio.portfolio_name }
                     /> */}
-
-
+                <Link to={process.env.PUBLIC_URL + '/' + portfolio.id} style={{ textDecoration: 'none' }} >
                 <CardHeader 
-                onClick={() => { this.props.setSelectedFund(portfolio.id)}}
+                // onClick={() => { (redirect) => { return <Redirect from={process.env.PUBLIC_URL + '/'} to={process.env.PUBLIC_URL + '/' + portfolio.id} />  }}}
+                onClick={() => { this.handleClick(portfolio.id)}}
+                // onClick={() => { this.props.setSelectedFund(portfolio.id)}}
                 avatar={
                     <Avatar aria-label="Portfolio" className={classes.avatar} >
-                        {/* { portfolio.portfolio_name.charAt(0).toUpperCase() } */}
-                        {/* { portfolio.inception_allocations.length } */}
-                        {/* <Typography component="p" > */}
                             {
                                 percentChange >= 0
                                 ? 
@@ -132,8 +129,6 @@ export class FundCard extends Component {
                                         { percentChange }%
                                     </Typography>   
                             }
-                        {/* </Typography> */}
-                        
                     </Avatar>
                 }
                 action={
@@ -144,22 +139,24 @@ export class FundCard extends Component {
                 title={ portfolio.portfolio_name }
                 subheader={ subheader }
                 />
-                    
-
+                </Link>
                     <div>
                         <ReactSwipe
                             className="carousel"
                             swipeOptions={{ continuous: true }}
                             ref={el => (reactSwipeEl = el)}
                         >
-                            <div onClick={() => reactSwipeEl.next()}><PieChart portfolioId={portfolio.id}  /></div>
-                            {/* <div onClick={() => reactSwipeEl.next()}><CardLineChart portfolioId={portfolio.id}  /></div>
+                            <div onClick={() => reactSwipeEl.next()}>
+                                <NewPieChart portfolioId={portfolio.id}  />
+                            </div>
+                            
+                            <div onClick={() => reactSwipeEl.next()}><CardLineChart portfolioId={portfolio.id}  /></div>
                             <div onClick={() => reactSwipeEl.next()}><TradingViewWidget symbol="BTCUSD"
                                     // theme={Themes.DARK}
                                     // locale="fr"
                                     autosize
                                 />
-                             </div> */}
+                             </div>
                         </ReactSwipe>
                         {/* <button onClick={() => reactSwipeEl.next()}>Next</button> */}
                         {/* <button onClick={() => reactSwipeEl.prev()}>Previous</button> */}
@@ -167,37 +164,19 @@ export class FundCard extends Component {
 
 
                     <Divider />
-                    {/* <PieChart portfolioId={portfolio.id}  /> */}
-                    {/* <CardLineChart portfolioId={portfolio.id} /> */}
-                    
-                    <CardContent 
-                    onClick={() => { this.props.setSelectedFund(portfolio.id)}}
-                    >
-                        {/* <Typography gutterBottom variant="h5" component="h2">
-                            { portfolio.portfolio_name }
-                        </Typography> */}
-                        {/* <Typography component="p">
-                            Created: { moment.unix(portfolio.inception_date).format('lll') }
-                        </Typography> */}
-                        {/* <hr />
-                        <Typography component="p">
-                            <b>{ verboseAssetList.join(', ') }</b>
-                        </Typography> */}
-                        {/* <hr /> */}
-                        <Typography component="p">
-                            Inception Value: { inceptionValue.toFixed(2) } {this.props.local_currency}
-                        </Typography>
-                        <Typography component="p">
-                            Market Value { marketValue.toFixed(2) } {this.props.local_currency}
-                        </Typography>
-                        {/* <Typography component="p">
-                            Percent Change: { percentChange }
-                        </Typography> */}
-                        {/* <hr />
-                        <Typography component="p">
-                            Status: { portfolio.status }
-                        </Typography> */}
-                    </CardContent>
+        
+                    {/* <Link to={process.env.PUBLIC_URL + '/1'} style={{ textDecoration: 'none' }} > */}
+                        <CardContent 
+                        // onClick={() => { this.props.setSelectedFund(portfolio.id)}}
+                        >
+                            <Typography component="p">
+                                Inception Value: { inceptionValue.toFixed(2) } {this.props.local_currency}
+                            </Typography>
+                            <Typography component="p">
+                                Market Value { marketValue.toFixed(2) } {this.props.local_currency}
+                            </Typography>
+                        </CardContent>
+                    {/* </Link> */}
                 </CardActionArea>
                 <Divider />
                 <CardActions>
@@ -207,25 +186,10 @@ export class FundCard extends Component {
                     <IconButton aria-label="Share">
                         <ShareIcon />
                     </IconButton>
-                    {/* <IconButton
-                        className={classes(classes.expand, {
-                        [classes.expandOpen]: this.state.expanded,
-                        })}
-                        onClick={this.handleExpandClick}
-                        aria-expanded={this.state.expanded}
-                        aria-label="Show more"
+                    <Button size="small" color="primary"  
+                    // onClick={() => { this.props.setSelectedFund(portfolio.id)}} 
+                    align='right'
                     >
-                        <ExpandMoreIcon />
-                    </IconButton> */}
-
-
-
-
-{/* 
-                    <Button size="small" color="primary">
-                    Share
-                    </Button> */}
-                    <Button size="small" color="primary"  onClick={() => { this.props.setSelectedFund(portfolio.id)}} align='right'>
                         Manage
                     </Button>
                 </CardActions>
@@ -241,12 +205,8 @@ FundCard.propTypes = {
 
 const mapStateToProps=(state) => {
     const { portfolios, mm_account, selected_portfolio, historical_price_data, spot_price, local_currency } = state
-    return { portfolios, mm_account, selected_portfolio, historical_price_data, spot_price, local_currency }
-    // return state
+    // return { portfolios, mm_account, selected_portfolio, historical_price_data, spot_price, local_currency }
+    return state
 }
 
 export default connect(mapStateToProps, actionCreators)(withStyles(styles)(FundCard))
-// export default connect(mapStateToProps, actionCreators)(FundCard);
-// export default FundCard
-// export default connect(mapStateToProps)(withStyles(styles)(FundCard))
-// export default withStyles(styles)(FundCard)

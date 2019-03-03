@@ -6,28 +6,29 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import List from '@material-ui/core/List';
+// import List from '@material-ui/core/List';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
-import Badge from '@material-ui/core/Badge';
+// import Badge from '@material-ui/core/Badge';
 import MenuIcon from '@material-ui/icons/Menu';
-import InfoIcon from '@material-ui/icons/Info';
+// import InfoIcon from '@material-ui/icons/Info';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import NotificationsIcon from '@material-ui/icons/Notifications';
-import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
-import { mainListItems, openListItems, closedListItems } from './ListItems';
-import SimpleLineChart from './SimpleLineChart';
-import SimpleTable from './SimpleTable';
-import moment from 'moment';
+// import NotificationsIcon from '@material-ui/icons/Notifications';
+// import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
+// import { mainListItems, openListItems, closedListItems } from './ListItems';
+// import SimpleLineChart from './SimpleLineChart';
+// import SimpleTable from './SimpleTable';
+// import moment from 'moment';
 import ListItems from './ListItems';
-import NewSmartFund from './NewSmartFund';
-import FundCard from './FundCard';
+import NewSmartFund from './NewSmartFund/NewSmartFund';
+import SmartFund from './SmartFund';
+// import FundCard from './FundCard';
 import FundList from './FundList';
-import Stringify from 'react-stringify'
+// import Stringify from 'react-stringify'
 import * as actionCreators from '../config/actions';
 import { connect } from 'react-redux';
-
+import { Switch, Route } from 'react-router-dom'
 
 const drawerWidth = 240;
 
@@ -124,9 +125,6 @@ class Dashboard extends React.Component {
   render() {
     const { classes } = this.props;
 
-    // const portfolio_list = this.props
-    // console.log("this.props.selected_portfolio", portfolio_list)
-    // console.log("this.props.portfolios", this.props.portfolios)
     return (
       
       <div className={classes.root}>
@@ -172,47 +170,28 @@ class Dashboard extends React.Component {
           <div className={classes.appBarSpacer} />
 
           {/* { this.props.selected_portfolio === 0 ? ( console.log("this.props.selected_portfolio === ", this.props.selected_portfolio) ) : <h1>31231231231231321</h1> } */}
-          { this.props.selected_portfolio === -1
-            ? (
-              <div>
-                {/* <br /> <br /> */}
-                {/* <h1>Add dashboard intro screen here with info</h1> */}
-                {/* <FundList /> */}
-                <NewSmartFund />
-
-                {/* <FundCard /> */}
-                {/* <Stringify value={this.props} /> */}
-              </div>
-            ) 
-            : null
-          }
-          
-          { this.props.selected_portfolio >= 0  
-            ?
-              <div>
-                <Typography variant="h4" gutterBottom component="h2">
-                  { this.props.portfolios[this.props.selected_portfolio].portfolio_name }
-                  {/* { selected_fund.portfolio_name } */}
-                </Typography>
-                <Typography variant="h6" gutterBottom component="h2">
-                  Created { moment.unix(this.props.portfolios[this.props.selected_portfolio].inception_date).format('lll') }
-                  {/* const date = moment.unix(item.time).format('YYYY-MM-DD') */}
-                </Typography>
-                <Typography variant="h6" gutterBottom component="h2">
-                  Price {this.props.local_currency}
-                </Typography>
-                <Typography component="div" className={classes.chartContainer}>
-                  <SimpleLineChart />
-                </Typography>
-                <Typography variant="h5" gutterBottom component="h2">
-                  Asset Allocation
-                </Typography>
-                <div className={classes.tableContainer}>
-                  <SimpleTable />
-                </div>
-              </div>
-            : null  
-          }
+          {/* { this.props.active_ui === 'new' // this.props.selected_portfolio === -1 && */}
+            {/* ?  */}
+            {/* <NewSmartFund /> */}
+            {/* : null */}
+          {/* } */}
+          {/* { this.props.active_ui === 'smartfunds' // this.props.selected_portfolio === -1 && */}
+            {/* ?  */}
+            {/* <FundList />  */}
+            {/* : null */}
+          {/* } */}
+  
+          <Switch>
+            <Route exact path={process.env.PUBLIC_URL + '/new'} component={NewSmartFund} />
+            <Route 
+              exact
+              path={process.env.PUBLIC_URL + '/:id'}
+              render={({match}) => <SmartFund 
+                match={match}  
+                />} 
+            />
+            <Route exact path={process.env.PUBLIC_URL + '/'} component={FundList} />
+          </Switch>
         </main>
       </div>
     );

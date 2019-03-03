@@ -1,22 +1,23 @@
 import React, { Component } from 'react';
-import Router from './Router'
-import { NavLink } from 'react-router-dom'
+// import Router from './Router'
+// import { NavLink } from 'react-router-dom'
 import * as actionCreators from './config/actions';
 import { connect } from 'react-redux';
-import Stringify from 'react-stringify'
-import SimpleLineChart from './ui/SimpleLineChart'
+// import Stringify from 'react-stringify'
+// import SimpleLineChart from './ui/SimpleLineChart'
 import Dashboard from './ui/Dashboard'
-import moment from 'moment';
+// import moment from 'moment';
 import Web3 from 'web3';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import getMuiTheme from 'material-ui/styles/getMuiTheme';
+// import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+// import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import Typography from '@material-ui/core/Typography';
 
-import {
-  Card,
-  Text,
-  Icon,
-  MetaMaskButton
-} from 'rimble-ui'
+// import {
+//   Card,
+//   Text,
+//   Icon,
+//   MetaMaskButton
+// } from 'rimble-ui'
 
 // const Navigation = (props) => <nav>
 //   {/* <ul> */}
@@ -55,7 +56,8 @@ class App extends Component {
             this.props.setAccount(newAccount)
             this.setState({ account: newAccount })
             this.state.web3.eth.getBalance(this.props.mm_account, (err, balance) => {
-              this.balance = this.props.web3.utils.fromWei(balance, "ether") + " ETH"
+              // this.balance = this.props.web3.utils.fromWei(balance, "ether") + " ETH"
+              this.balance = Number(this.props.web3.utils.fromWei(balance, "ether"))
               // console.log("this.balance", this.balance)
               this.props.setBalance(this.balance)
             });
@@ -145,7 +147,7 @@ class App extends Component {
     if ( this.props.loaded_data.coin_data === false  || this.props.loaded_data.spot_price === false || this.props.loaded_data.historical_price_data === false ) {
       return (
         <div align='center'>
-          <h3>Loading SmartFund data. Please wait... </h3>
+          <Typography>Loading SmartFund data. Please wait...</Typography>
           <h1>( ͡° ͜ʖ ͡°)</h1>
 
           
@@ -165,7 +167,8 @@ class App extends Component {
     return (
       <div>
         {/* <Navigation /> */}
-        <Router />
+        {/* <Router /> */}
+        <Dashboard />
         {/* <Stringify value={this.state.web3} /> */}
       </div>
 
