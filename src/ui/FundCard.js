@@ -112,34 +112,28 @@ export class FundCard extends Component {
                     title={ portfolio.portfolio_name }
                     /> */}
                 <Link to={process.env.PUBLIC_URL + '/' + portfolio.id} style={{ textDecoration: 'none' }} >
-                <CardHeader 
-                // onClick={() => { (redirect) => { return <Redirect from={process.env.PUBLIC_URL + '/'} to={process.env.PUBLIC_URL + '/' + portfolio.id} />  }}}
-                onClick={() => { this.handleClick(portfolio.id)}}
-                // onClick={() => { this.props.setSelectedFund(portfolio.id)}}
-                avatar={
-                    <Avatar aria-label="Portfolio" className={classes.avatar} >
-                            {
-                                percentChange >= 0
-                                ? 
-                                    <Typography component="p" color={'primary'}>
-                                        +{ percentChange }%
-                                    </Typography>
-                                : 
-                                    <Typography component="p" color={'error'}>
-                                        { percentChange }%
-                                    </Typography>   
+                    <CardHeader 
+                    // onClick={() => { (redirect) => { return <Redirect from={process.env.PUBLIC_URL + '/'} to={process.env.PUBLIC_URL + '/' + portfolio.id} />  }}}
+                    onClick={() => { this.handleClick(portfolio.id)}}
+                    // onClick={() => { this.props.setSelectedFund(portfolio.id)}}
+                    avatar={
+                        <Avatar aria-label="Portfolio" className={classes.avatar} >
+                            { percentChange >= 0
+                                ? <Typography component="p" color={'primary'}>+{ percentChange }%</Typography>
+                                : <Typography component="p" color={'error'}>{ percentChange }%</Typography>   
                             }
-                    </Avatar>
-                }
-                action={
-                    <IconButton>
-                    <MoreVertIcon />
-                    </IconButton>
-                }
-                title={ portfolio.portfolio_name }
-                subheader={ subheader }
-                />
+                        </Avatar>
+                    }
+                    action={
+                        <IconButton>
+                        <MoreVertIcon />
+                        </IconButton>
+                    }
+                    title={ portfolio.portfolio_name }
+                    subheader={ subheader }
+                    />
                 </Link>
+                    {/* <CardContent > */}
                     <div>
                         <ReactSwipe
                             className="carousel"
@@ -149,19 +143,21 @@ export class FundCard extends Component {
                             <div onClick={() => reactSwipeEl.next()}>
                                 <NewPieChart portfolioId={portfolio.id}  />
                             </div>
-                            
                             <div onClick={() => reactSwipeEl.next()}><CardLineChart portfolioId={portfolio.id}  /></div>
-                            <div onClick={() => reactSwipeEl.next()}><TradingViewWidget symbol="BTCUSD"
+                            {/* <div onClick={() => reactSwipeEl.next()}
+                            style={"height: 100%;"}
+                            >
+                            <TradingViewWidget symbol="BTCUSD"
                                     // theme={Themes.DARK}
                                     // locale="fr"
-                                    autosize
+                                    // autosize
                                 />
-                             </div>
+                            </div> */}
                         </ReactSwipe>
                         {/* <button onClick={() => reactSwipeEl.next()}>Next</button> */}
                         {/* <button onClick={() => reactSwipeEl.prev()}>Previous</button> */}
                     </div>
-
+                    {/* </CardContent>  */}
 
                     <Divider />
         
@@ -191,6 +187,18 @@ export class FundCard extends Component {
                     align='right'
                     >
                         Manage
+                    </Button>
+                    <Button size="small" color="primary"  
+                    onClick={() => reactSwipeEl.prev()}
+                    align='right'
+                    >
+                        Prev Chart
+                    </Button>
+                    <Button size="small" color="primary"  
+                    onClick={() => reactSwipeEl.next()}
+                    align='right'
+                    >
+                        Next Chart
                     </Button>
                 </CardActions>
                 </Card> 
