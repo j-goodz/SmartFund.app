@@ -1,6 +1,6 @@
 pragma solidity ^0.4.19; //0.4.26commit //4.22
 pragma experimental ABIEncoderV2;
-import "./Oraclize.sol";
+// import "./Oraclize.sol";
 // import './SafeMath.sol';
 
 
@@ -9,6 +9,9 @@ contract SmartFundFactory is usingOraclize {
     // constructor() {
     function SmartFundFactory() {
         factoryOwner = msg.sender;      
+        
+        // smartFundCount = 0;
+        
         tickerCount = 5;
         
         tickerList[1] = 'BTC';
@@ -37,18 +40,16 @@ contract SmartFundFactory is usingOraclize {
     // using SafeMath for uint256;  
     address factoryOwner;                                           
     mapping(uint => string) public tickerList;
-    uint256 public tickerCount;
-    // uint256 public tickerCount;
-    // uint public tickerCount = 0;
+    uint public tickerCount;
     mapping(uint => Fund) public smartFundContracts; 
-    uint256 public smartFundCount = 0;
-    // uint256 public smartFundCount;
+    uint public smartFundCount;
     uint public defaultOpenFee = 5; 
     uint public defaultCloseFee = 1; 
     enum FundState {Pending, Open, Closed}        
     enum QueryStatus {Pending, Complete}
    
     event LogNewOraclizeQuery(uint fundId, uint tickerId, string description);
+    
     
     event NewSmartFundAdded(
         uint indexed findId, 
@@ -122,6 +123,10 @@ contract SmartFundFactory is usingOraclize {
         uint closeFee;
     }                                                          
     
+    uint public tempCount;
+    uint public allocationCount;
+    
+    
     function initNewSmartFund(string _smartFundName, uint256[2][] _allocations) external payable returns (bool) {
         // smartFundCount = smartFundCount + 1;
         // if (oraclize_getPrice("URL") > this.balance) {
@@ -134,6 +139,7 @@ contract SmartFundFactory is usingOraclize {
         // require tickerId <= ticker count
         // check that address(this).balance is >= msg.value
         
+        smartFundCount++;
         Fund newFund; 
         newFund.fundState = FundState.Pending;
         newFund.funderAccount = msg.sender;      
@@ -146,7 +152,6 @@ contract SmartFundFactory is usingOraclize {
         // newFund.assetCount = 0;
         newFund.assetCount = _allocations.length;
         
-        smartFundCount++;
         smartFundContracts[smartFundCount] = newFund;
         
         for(uint i = 0 ; i <= _allocations.length-1 ; i++){ 
@@ -154,6 +159,9 @@ contract SmartFundFactory is usingOraclize {
             uint newPercent = _allocations[i][1];
             uint amount = 0;
             uint ethPrice = 0;
+            
+            tempCount= tempCount + _allocations[i][1];
+            allocationCount++;
             
             bytes32 newQueryId;
             // newQueryId = oraclize_query(
@@ -171,7 +179,7 @@ contract SmartFundFactory is usingOraclize {
             
             var newAllocation = Allocation(newTickerId, amount, newPercent, ethPrice, newQueryId, QueryStatus.Pending);
             // smartFundContracts[smartFundCount].openAllocation[smartFundContracts[smartFundCount].assetCount] = newAllocation;
-            smartFundContracts[smartFundCount].openAllocation[i] = newAllocation;
+            smartFundContracts[smartFundCount].openAllocation[i+1] = newAllocation;
             emit NewAllocation(smartFundCount, newTickerId, amount, newPercent, ethPrice, newQueryId, QueryStatus.Pending);
         }
         
