@@ -1,0 +1,49 @@
+const SmartFundFactory = artifacts.require("SmartFundFactory");
+
+contract("SmartFundFactory", async accounts => {
+
+  it("Should send coin correctly", async () => {
+
+    // console.log(SmartFundFactory)
+
+    // Get initial balances of first and second account.
+    let account_one = accounts[0];
+    let account_two = accounts[1];
+
+    let amount = 10;
+
+    let instance = await SmartFundFactory.deployed();
+    let sff = instance;
+
+    console.log(sff)
+
+    // let balance = await sff.getBalance.call(account_one);
+    // let account_one_starting_balance = balance.toNumber();
+
+    // balance = await sff.getBalance.call(account_two);
+    // let account_two_starting_balance = balance.toNumber();
+    // await meta.sendCoin(account_two, amount, { from: account_one });
+
+    // balance = await sff.getBalance.call(account_one);
+    // let account_one_ending_balance = balance.toNumber();
+
+    // balance = await sff.getBalance.call(account_two);
+    // let account_two_ending_balance = balance.toNumber();
+
+    // assert.equal(
+    //   account_one_ending_balance,
+    //   account_one_starting_balance - amount,
+    //   "Amount wasn't correctly taken from the sender"
+    // );
+    // assert.equal(
+    //   account_two_ending_balance,
+    //   account_two_starting_balance + amount,
+    //   "Amount wasn't correctly sent to the receiver"
+    // );
+    // assert.equal(
+    //   1,
+    //   1,
+    //   "1 doesnt = 1!"
+    // );
+  });
+});
