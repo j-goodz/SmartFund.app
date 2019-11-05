@@ -1,5 +1,5 @@
 pragma solidity ^0.4.19; //0.4.26commit //4.22
-pragma experimental ABIEncoderV2;
+// pragma experimental ABIEncoderV2;
 import "./Oraclize.sol";
 // import './SafeMath.sol';
 
@@ -119,10 +119,11 @@ contract SmartFundFactory is usingOraclize {
         uint closeFee;
     }
 
-    uint public tempCount;
+    // uint public tempCount;
     uint public allocationCount;
 
     function initNewSmartFund(string _smartFundName, uint256[2][] _allocations) external payable returns (bool) {
+    // function initNewSmartFund(string _smartFundName, uint256[] _allocations) external payable returns (bool) {
         // smartFundCount = smartFundCount + 1;
         // if (oraclize_getPrice("URL") > this.balance) {
         //     LogNewOraclizeQuery("Oraclize query was NOT sent, please add some ETH to cover for the query fee");
@@ -134,8 +135,9 @@ contract SmartFundFactory is usingOraclize {
         // require tickerId <= ticker count
         // check that address(this).balance is >= msg.value
 
-        smartFundCount++;
+        
         Fund newFund;
+        uint newFundID = smartFundCount + 1;
         newFund.fundState = FundState.Pending;
         newFund.funderAccount = msg.sender;
         newFund.smartFundName = _smartFundName;
@@ -150,34 +152,44 @@ contract SmartFundFactory is usingOraclize {
         smartFundContracts[smartFundCount] = newFund;
 
         for(uint i = 0 ; i <= _allocations.length-1 ; i++){
-            uint newTickerId = _allocations[i][0];
-            uint newPercent = _allocations[i][1];
-            uint amount = 0;
-            uint ethPrice = 0;
+            uint remainder = i%2;
 
-            tempCount= tempCount + _allocations[i][1];
-            allocationCount++;
+            if (remainder==0) {
+            // if (i % 2 == 0) {
+                // uint newTickerId = _allocations[i];
+                // uint newPercent = _allocations[i+1];
+                uint newTickerId = _allocations[i][0];
+                uint newPercent = _allocations[i][1];
+                uint amount = 0;
+                uint ethPrice = 0;
 
-            bytes32 newQueryId;
-            // newQueryId = oraclize_query(
-            //     "URL",
-            //     strConcat(
-            //         "json(https://min-api.cryptocompare.com/data/pricemultifull?fsyms=ETH",
-            //         tickerList[newTickerId],
-            //         ").RAW.ETH.",
-            //         tickerList[newTickerId],
-            //         ".PRICE"
-            //     ),
-            //     smartFundCount
-            // );
-            // LogNewOraclizeQuery(smartFundCount, newTickerId, "Oraclize query sent");
+                // tempCount= tempCount + _allocations[i][1];
+                allocationCount++;
 
-            var newAllocation = Allocation(newTickerId, amount, newPercent, ethPrice, newQueryId, QueryStatus.Pending);
-            // smartFundContracts[smartFundCount].openAllocation[smartFundContracts[smartFundCount].assetCount] = newAllocation;
-            smartFundContracts[smartFundCount].openAllocation[i+1] = newAllocation;
-            emit NewAllocation(smartFundCount, newTickerId, amount, newPercent, ethPrice, newQueryId, QueryStatus.Pending);
+                bytes32 newQueryId;
+                // newQueryId = oraclize_query(
+                //     "URL",
+                //     strConcat(
+                //         "json(https://min-api.cryptocompare.com/data/pricemultifull?fsyms=ETH",
+                //         tickerList[newTickerId],
+                //         ").RAW.ETH.",
+                //         tickerList[newTickerId],
+                //         ".PRICE"
+                //     ),
+                //     smartFundCount
+                // );
+                // LogNewOraclizeQuery(smartFundCount, newTickerId, "Oraclize query sent");
+
+                var newAllocation = Allocation(newTickerId, amount, newPercent, ethPrice, newQueryId, QueryStatus.Pending);
+                // smartFundContracts[smartFundCount].openAllocation[smartFundContracts[smartFundCount].assetCount] = newAllocation;
+                smartFundContracts[newFundID].openAllocation[i+1] = newAllocation;
+                emit NewAllocation(newFundID, newTickerId, amount, newPercent, ethPrice, newQueryId, QueryStatus.Pending);
+            }
         }
 
+
+        smartFundCount++;
+        
         return true;
     }
 
@@ -189,6 +201,22 @@ contract SmartFundFactory is usingOraclize {
             smartFundContracts[_fundId].openAllocation[_allocationId].ethPrice,
             smartFundContracts[_fundId].openAllocation[_allocationId].queryId,
             smartFundContracts[_fundId].openAllocation[_allocationId].queryStatus
+        );
+    }
+
+    function getSmartFundDetails(uint _fundId) view returns(address, string, uint, uint, uint, FundState) {
+        return (
+            smartFundContracts[_fundId].funderAccount,
+            smartFundContracts[_fundId].smartFundName,
+            smartFundContracts[_fundId].seedAmount,
+            smartFundContracts[_fundId].openDateUnixTimestamp,
+            // smartFundContracts[_fundId].closeDateUnixTimestamp,
+            smartFundContracts[_fundId].assetCount,
+            // mapping (uint => Allocation) openAllocation;
+            // mapping (uint => Allocation) closeAllocation;
+            smartFundContracts[_fundId].fundState
+            // smartFundContracts[_fundId].openFee,
+            // smartFundContracts[_fundId].closeFee
         );
     }
 
